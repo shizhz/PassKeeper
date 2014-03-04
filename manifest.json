@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "PassCrt",
+  "name": "PassKeeper",
   "description": "Manage all password here",
   "version": "1.0",
 
@@ -9,7 +9,7 @@
     "https://secure.flickr.com/"
   ],
   "browser_action": {
-    "default_icon": "passCrt.png",
-    "default_popup": "popup.html"
+    "default_icon": "passKeeper.png",
+    "default_popup": "passKeeper.html"
   }
 }
