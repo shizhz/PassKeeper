@@ -1,12 +1,5 @@
 (function($) {
     'use strict';
-    var DEBUG = true;
-    var dbg = function function_name(msg) {
-        if (!DEBUG) {
-            return;
-        }
-        console.log(msg + '--: selectedIds: ' + selectedIds);
-    };
 
     var defaultSettings = {
         compareBoxId: 'selectDiv',
@@ -15,9 +8,8 @@
         checkboxPricePostfix: '-price',
         selectedIdsTag: 'selectedIds',
         selectedIdsSep: ','
-
     };
-    var selectedIds = [];
+    var SelectedComparingIds = [];
 
     $.fn.compare = function(options) {
         var settings = $.extend(true, defaultSettings, options);
@@ -28,7 +20,7 @@
             },
 
             getAllCheckedboxes: function() {
-                return selectedIds.map(function(offeringId) {
+                return SelectedComparingIds.map(function(offeringId) {
                     return settings.checkboxPrefix + offeringId;
                 });
             },
@@ -37,37 +29,63 @@
                 var checkedBoxes = this.getAllCheckedboxes();
 
                 this.getAllCheckboxes().each(function() {
-                    var offeringId = $(this).attr('id');
-                    if (checkedBoxes.indexOf(offeringId) > -1) {
+                    var checkboxId = $(this).attr('id');
+                    if (checkedBoxes.indexOf(checkboxId) > -1) {
                         $(this).attr('checked', 'checked');
                     }
                 });
             },
 
             flushComparingDivBox: function() {
-                selectedIds.forEach(function(offeringId) {
+                var comparingBox = $('#' + settings.compareBoxId);
+                var itemContainer = $('#items', comparingBox).empty();
+
+                SelectedComparingIds.forEach(function(offeringId) {
                     var name = $('#' + settings.checkboxPrefix + offeringId + settings.checkboxLabelPostfix).val();
                     var price = $('#' + settings.checkboxPrefix + offeringId + settings.checkboxPricePostfix).val();
                     var itemHTML = "<div class='item' id='item_" + offeringId + "'>" + "<div class='content'>" + "<div class='productname'>" + name + "</div>" + "<div class='productprice'>" + price + "</div>" + "</div>" + "<a href='javascript:;' class='removebtn'></a>" + "<input type='hidden'  value=\'" + offeringId + "\'/>" + "</div>"
-                    $(itemHTML).appendTo($('#items'));
+                    $(itemHTML).appendTo(itemContainer);
                 });
+
+                comparingBox.toggle(SelectedComparingIds.length > 0);
             },
 
-            init: function() {
+            registerCheckboxClick: function() {
+                var checkboxes = this.getAllCheckboxes();
+                var that = this;
+                checkboxes.each(function() {
+                    $(this).on('click', function(event) {
+                        console.log('Clicked: ' + $(this).attr('id'))
+                        // TODO: PROCESS FOR CLICK
+                        SelectedComparingIds.push($(this).val());
+                        SelectedComparingIds = SelectedComparingIds.filter(function(offeringId) {
+                            return $('#' + settings.checkboxPrefix + offeringId).is(':checked') && SelectedComparingIds.indexOf(offeringId) == -1;
+                        });
+                    });
+                });
+                this.flushComparingDivBox();
+            },
+
+            initSelectedComparingIds: function() {
                 // init selectedIds
                 var ids = $('#' + settings.selectedIdsTag).val();
                 ids = ids ? ids : '';
-                selectedIds = ids.split(settings.selectedIdsSep).map(function(item) {
+                SelectedComparingIds = ids.split(settings.selectedIdsSep).map(function(item) {
                     return $.trim(item);
                 }).filter(function(item) {
                     return item.length > 0;
                 });
             },
 
+            init: function() {
+                this.initSelectedComparingIds();
+                this.flushCheckboxStatus();
+                this.flushComparingDivBox();
+                this.registerCheckboxClick();
+            },
         };
 
         Compare.init();
-        Compare.flushCheckboxStatus();
         return this;
     };
 })(jQuery);
