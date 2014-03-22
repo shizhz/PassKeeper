@@ -1,15 +1,37 @@
 {
   "manifest_version": 2,
-
   "name": "PassKeeper",
-  "description": "Manage all password here",
   "version": "1.0",
 
+  "description": "Manage all password",
+
+  "icons": {
+      "16": "icons/passkeeper-16.png",
+      "48": "icons/passkeeper-48.png",
+      "128": "icons/passkeeper-128.png"
+  },
+
   "permissions": [
-    "https://secure.flickr.com/"
+    "*://*/*",
+    "storage",
+    "tabs"
   ],
+
   "browser_action": {
-    "default_icon": "passKeeper.png",
+    "default_icon": "icons/passkeeper-22.png",
     "default_popup": "passKeeper.html"
-  }
+  },
+
+  //"background": {
+      ////"scripts": ["js/passKeeper.js"],
+      ////"persistent": false,
+      //"page": "passKeeper.html"
+  //},
+
+  "content_scripts": [
+      {
+          "matches": ["<all_urls>"],
+          "js": ["js/jquery-2.1.0.js", "js/passKeeper.js"]
+      }
+  ]
 }
