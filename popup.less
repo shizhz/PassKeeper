@@ -1,12 +1,26 @@
 @theme: #ccc;
+@popup_width: 310px;
+@popup_height: 200px;
+@menu_number: 2;
+@menu_height: 40px;
+@align_left: 5px;
+@font_size: 11pt;
+.popup_width {
+    width: @popup_width;
+}
+.menu_width {
+    width: (@popup_width / @menu_number) - 1;
+}
 .shadow {
-    box-shadow: 0 1px 2px 0@theme;
+    box-shadow: 0 1px 2px 0 @theme;
 
 }
-.border(@radius: 2px) {
+.round(@radius: 2px) {
+    -webkit-border-radius: @radius;
     border-radius: @radius;
-
-border: 1px solid@theme - #050505;
+}
+.border {
+    border: 1px solid@theme - #050505;
 }
 .divider {
     border-style: solid;
@@ -19,53 +33,106 @@ border: 1px solid@theme - #050505;
 .hovereffect {
     background: -webkit-linear-gradient(top, @theme - #010101 0%, @theme - #121212 50%, @theme - #222222 51%, @theme - #050505 100%);
 }
+.activeffect {
+     .hovereffect;
+}
 .textcolor(@txtcolor) when (lightness(@txtcolor) >=50%) {
     color: @txtcolor;
-
-text-shadow: 1px 1px 0px #000000;
+    text-shadow: 1px 1px 0px #000000;
 }
 .textcolor(@txtcolor) when (lightness(@txtcolor) < 50%) {
     color: @txtcolor;
-
-text-shadow: 1px 1px 0px #ffffff;
+    text-shadow: 1px 1px 0px #ffffff;
 }
+
+.alert-box {
+    position: relative;
+    border-style: solid;
+    border-width: 1px;
+    font-weight: normal;
+    margin-top: 2px;
+    font-size: @font_size + 2;
+    margin-left: @align_left;
+    padding-left: @align_left;
+    height: 30px;
+    line-height:30px;
+    vertical-align: middle;
+    .round;
+    a {
+        text-decoration: none;
+        color: white;
+        cursor: auto;
+        &:hover {
+            color: #222222;
+        }
+    }
+}
+.warning {
+     background-color: #f08a24;
+     border-color: #de770f;
+     color: white;
+}
+
+.error {
+    background-color: #f04124;
+    border-color: #e43316;
+    color: white;
+}
+
+.btn-close {
+    position: absolute;
+    right: 10px;
+}
+
 body {
     background: lighten(@theme, 30);
-    font-size: 11pt;
+    font-size: @font_size;
 }
-nav {
-    margin: 50px auto 0;
-    width: 788px;
-    height: 45px;
+.passkeeper_popup_box {
+    width: @popup_width + 1;
+    height: @popup_height;
     .border;
-    .shadow;
-    ul {
-        padding: 0px;
-        margin: 0px;
-        li {
-            display: inline;
-            a {
-                text-decoration: none;
-                display: inline-block;
-                float: left;
-                width: 156px;
-                height: 45px;
-                text-align: center;
-                line-height: 300%;
-                /*.textcolor(#f2f2f2);*/
-                .textcolor(#555);
-                .divider;
-                .gradient;
-                &:hover {
-                    .hovereffect;
+    border-top: none;
+    .passkeeper-message {
+        display: block;
+        .alert-box;
+        .error;
+    }
+    nav {
+        margin: 0 auto 0;
+        width: @popup_width;
+        height: @menu_height;
+        .round;
+        .border;
+        .shadow;
+        ul {
+            padding: 0px;
+            margin: 0px;
+            li {
+                display: inline;
+                a {
+                    text-decoration: none;
+                    display: inline-block;
+                    float: left;
+                    .menu_width;
+                    height: @menu_height;
+                    text-align: center;
+                    line-height: 300%;
+                    /*.textcolor(#f2f2f2);*/
+                    .textcolor(#555);
+                    .divider;
+                    .gradient;
+                    &:hover {
+                        .hovereffect;
+                    }
                 }
             }
-        }
-        li:first-child a {
-            border-left: none;
-        }
-        li:last-child a {
-            border-right: none;
+            li:first-child a {
+                border-left: none;
+            }
+            li:last-child a {
+                border-right: none;
+            }
         }
     }
 }
