@@ -14,6 +14,8 @@
                 'menu-query': 'passkeeper-query'
             },
 
+            current: settings.defaultTab,
+
             focusFirst: function() {
                 $('input:visible:first').focus();
             },
@@ -30,8 +32,8 @@
 
                 $.each(menus, function(key, value) {
                     $('#' + key).on('click', function(event) {
-                        event.preventDefault();
                         var menuTabId = $(this).attr('id');
+
                         $.each(menus, function(k, v) {
                             $('#' + v).toggle(k == menuTabId);
                             $('#' + k).toggleClass('activeffect', k == menuTabId);
@@ -39,6 +41,8 @@
 
                         this_.focusFirst();
                         this_.clear();
+                        this_.current = menuTabId;
+                        event.preventDefault();
                     });
                 });
             },
@@ -50,28 +54,46 @@
             }
         };
 
-        MenuWatcher.init();
+        var HotKeys = {
+            enable: false,
+            modes: ['INSERT', 'NORMAL'],
+            currentMode: 'INSERT',
+            keys: {
+                '27': false, // esc
+                '37': false, // left key
+                '39': false, // right key
+                '17': false, // ctrl
+                '105': false, // i
+                '104': false, // h
+                '108': false, // l
+            },
 
-        return this;
-    }
+            trigger: function () {
+                if (this.keys['17'] && this.keys['105']) {
+                    // TODO: popup box
+                }
+            },
 
-    function bindHotKeys() {
-        var downkeys = {
-            '17': false, // ctrl key
-            '73': false // combination key: i
+            init: function(popupBox) {
+                var this_ = this;
+                $(document).keydown(function(event) {
+                    var key = event.which;
+                    this_.keys[key] == false && (this_.keys[key][1] = true);
+                    this_.trigger();
+                }).keyup(function(event) {
+                    var key = event.which;
+                    this_.keys[key] && (this_.keys[event.which] == false);
+                });
+
+                // TODO: register hotkeys to popupBox
+            }
         };
 
-        return function() {
-            $(document).keydown(function(event) {
-                downkeys[event.which] = true;
-                if (downkeys['17'] && downkeys['73']) {}
-
-            }).keyup(function(event) {
-                downkeys[event.which] = false;
-            });
-        };
+        return this.each(function() {
+            MenuWatcher.init();
+            HotKeys.init(this);
+        });
     }
-
 })(jQuery);
 
 $(function() {
