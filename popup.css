@@ -23,7 +23,7 @@
   background: -webkit-linear-gradient(top, #cbcbcb 0%, #bababa 50%, #aaaaaa 51%, #c7c7c7 100%);
 }
 .activeffect {
-  background: -webkit-linear-gradient(top, #cbcbcb 0%, #bababa 50%, #aaaaaa 51%, #c7c7c7 100%);
+  background: -webkit-linear-gradient(top, #cbcbcb 0%, #bababa 50%, #aaaaaa 51%, #c7c7c7 100%) !important;
 }
 .alert-box {
   border-style: none;
@@ -122,7 +122,7 @@ body {
 .passkeeper-popup-box nav ul li {
   display: inline;
 }
-.passkeeper-popup-box nav ul li a {
+.passkeeper-popup-box nav ul li .menu-tab {
   text-decoration: none;
   display: inline-block;
   float: left;
@@ -130,7 +130,6 @@ body {
   height: 40px;
   text-align: center;
   line-height: 300%;
-  /*.textcolor(#f2f2f2);*/
   color: #555555;
   text-shadow: 1px 1px 0px #ffffff;
   border-style: solid;
@@ -138,7 +137,7 @@ body {
   border-color: transparent #bbbbbb transparent #ffffff;
   background: -webkit-linear-gradient(top, #f1f1f1 0%, #e3e3e3 50%, #cbcbcb 51%, #e1e1e1 100%);
 }
-.passkeeper-popup-box nav ul li a:hover {
+.passkeeper-popup-box nav ul li .menu-tab:hover {
   background: -webkit-linear-gradient(top, #cbcbcb 0%, #bababa 50%, #aaaaaa 51%, #c7c7c7 100%);
 }
 .passkeeper-popup-box nav ul li:first-child a {
@@ -147,67 +146,20 @@ body {
 .passkeeper-popup-box nav ul li:last-child a {
   border-right: none;
 }
-.passkeeper-popup-box .passkeeper-login {
-  width: 310px;
-  height: 50px;
-  display: table;
-}
-.passkeeper-popup-box .passkeeper-login div {
-  display: table-cell;
-  vertical-align: middle;
-}
-.passkeeper-popup-box .passkeeper-login div input[type=text],
-.passkeeper-popup-box .passkeeper-login div input[type=password] {
-  margin-left: 5px;
-  margin-top: 10px;
-  padding-left: 5px;
-  width: 206.66666667px;
-  height: 30px;
-  line-height: 30px;
-  color: #000000;
-  outline: 1px solid #cccccc;
-  border: 1px solid #c7c7c7;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-box-shadow: 0 1px 2px 0 #cccccc;
-  box-shadow: 0 1px 2px 0 #cccccc;
-}
-.passkeeper-popup-box .passkeeper-login div input[type=text]:focus,
-.passkeeper-popup-box .passkeeper-login div input[type=password]:focus {
-  border-color: #b3b3b3;
-  outline-color: #999999;
-  outline-offset: 0;
-}
-.passkeeper-popup-box .passkeeper-login div a {
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  width: 60px;
-  height: 30x;
-  line-height: 30px;
-  display: inline-block;
-  color: white;
-  font-size: 11pt;
-  font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
-  text-decoration: none;
-  vertical-align: middle;
-  text-align: center;
-  cursor: pointer;
-  background: #008cba;
-}
-.passkeeper-popup-box .passkeeper-login div a:hover {
-  background: #0079a1;
-}
+.passkeeper-popup-box .passkeeper-login,
 .passkeeper-popup-box .passkeeper-query {
   width: 310px;
   height: 50px;
   display: table;
-  display: none;
 }
+.passkeeper-popup-box .passkeeper-login div,
 .passkeeper-popup-box .passkeeper-query div {
   display: table-cell;
   vertical-align: middle;
 }
+.passkeeper-popup-box .passkeeper-login div input[type=text],
 .passkeeper-popup-box .passkeeper-query div input[type=text],
+.passkeeper-popup-box .passkeeper-login div input[type=password],
 .passkeeper-popup-box .passkeeper-query div input[type=password] {
   margin-left: 5px;
   margin-top: 10px;
@@ -223,12 +175,15 @@ body {
   -webkit-box-shadow: 0 1px 2px 0 #cccccc;
   box-shadow: 0 1px 2px 0 #cccccc;
 }
+.passkeeper-popup-box .passkeeper-login div input[type=text]:focus,
 .passkeeper-popup-box .passkeeper-query div input[type=text]:focus,
+.passkeeper-popup-box .passkeeper-login div input[type=password]:focus,
 .passkeeper-popup-box .passkeeper-query div input[type=password]:focus {
   border-color: #b3b3b3;
   outline-color: #999999;
   outline-offset: 0;
 }
+.passkeeper-popup-box .passkeeper-login div a,
 .passkeeper-popup-box .passkeeper-query div a {
   -webkit-border-radius: 2px;
   border-radius: 2px;
@@ -245,6 +200,10 @@ body {
   cursor: pointer;
   background: #008cba;
 }
+.passkeeper-popup-box .passkeeper-login div a:hover,
 .passkeeper-popup-box .passkeeper-query div a:hover {
   background: #0079a1;
+}
+.passkeeper-popup-box .passkeeper-query {
+  display: none;
 }

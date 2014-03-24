@@ -1,57 +1,59 @@
 (function($) {
     'use strict';
 
-    var MenuWatcher = {
-        menus: {
-            'menu-login': 'passkeeper-login',
-            'menu-query': 'passkeeper-query'
-        },
+    var defaultSettings = {
+        'defaultTab': 'menu-login'
+    };
 
-        clicker: function() {
-            var menus = this.menus;
-            $.each(menus, function(key, value) {
-                $('#' + key).on('click', function(event) {
-                    event.preventDefault();
-                    $.each(menus, function(k, v) {
-                        $('#' + k).toggleClass('activeffect');
-                        $('#' + v).toggle();
+    $.fn.passkeeper = function(options) {
+        var settings = $.extend(defaultSettings, options);
+
+        var MenuWatcher = {
+            menus: {
+                'menu-login': 'passkeeper-login',
+                'menu-query': 'passkeeper-query'
+            },
+
+            focusFirst: function() {
+                $('input:visible:first').focus();
+            },
+
+            clear: function() {
+                $('input:visible').each(function() {
+                    $(this).val('');
+                });
+            },
+
+            clicker: function() {
+                var menus = this.menus;
+                var this_ = this;
+
+                $.each(menus, function(key, value) {
+                    $('#' + key).on('click', function(event) {
+                        event.preventDefault();
+                        var menuTabId = $(this).attr('id');
+                        $.each(menus, function(k, v) {
+                            $('#' + v).toggle(k == menuTabId);
+                            $('#' + k).toggleClass('activeffect', k == menuTabId);
+                        });
+
+                        this_.focusFirst();
+                        this_.clear();
                     });
                 });
-            });
-        },
+            },
 
-        init: function() {
-            this.clicker();
-        },
-    };
+            init: function() {
+                $('#' + settings.defaultTab).removeClass('activeffect').addClass('activeffect');
+                this.focusFirst();
+                this.clicker();
+            }
+        };
 
+        MenuWatcher.init();
 
-    function PopupBox() {
-        this.title_ = "Password for PassKeeper";
-        this.error_msg_ = "Wrong password!";
-        this.error_msg_reset_ = "Reset";
+        return this;
     }
-
-    PopupBox.prototype.build = function() {
-        //var trigger = function() {
-        //// TODO: trigger 
-        //};
-        //var pkBox = $('<div>').attr('id', 'passkeeper-box').addClass('passkeeper_popup_box');
-        //$('<h1>').text(this.title_).appendTo(pkBox);
-        //var passwd = $('<input>').attr('type', 'password').attr('name', 'password').attr('placeholder', 'Password').keypress(function(event) {
-        //if (event.which == 13) {
-        //trigger();
-        //}
-        //});
-        //$('<p>').append(passwd).appendTo(pkBox);
-        //var p = $('<p>').addClass('submit').appendTo(pkBox);
-        //$('<input>').attr('type', 'button').attr('name', 'btn_go').attr('value', 'Go').on('click', trigger).appendTo(p);
-        //$('<span>').addClass('passkeeper_error_msg').text(this.error_msg_).append($('<a href="#">').text(this.error_msg_reset_).on('click', function(event) {
-        //// TODO: reset password
-        //})).appendTo(p);
-
-        //return pkBox;
-    };
 
     function bindHotKeys() {
         var downkeys = {
@@ -70,6 +72,8 @@
         };
     }
 
-    MenuWatcher.init();
-
 })(jQuery);
+
+$(function() {
+    $('#passkeeper-box').passkeeper();
+});

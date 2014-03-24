@@ -38,7 +38,7 @@
     background: -webkit-linear-gradient(top, @theme - #010101 0%, @theme - #121212 50%, @theme - #222222 51%, @theme - #050505 100%);
 }
 .activeffect {
-     .hovereffect;
+     .hovereffect !important;
 }
 .textcolor(@txtcolor) when (lightness(@txtcolor) >=50%) {
     color: @txtcolor;
@@ -133,7 +133,7 @@ body {
             margin: 0px;
             li {
                 display: inline;
-                a {
+                .menu-tab {
                     text-decoration: none;
                     display: inline-block;
                     float: left;
@@ -141,7 +141,6 @@ body {
                     height: @menu_height;
                     text-align: center;
                     line-height: 300%;
-                    /*.textcolor(#f2f2f2);*/
                     .textcolor(#555);
                     .divider;
                     .gradient;
@@ -158,7 +157,7 @@ body {
             }
         }
     }
-    .passkeeper-login {
+    .passkeeper-login, .passkeeper-query {
         width: @popup_width;
         height: 50px;
         display: table;
@@ -194,7 +193,6 @@ body {
         }
     }
     .passkeeper-query {
-        .passkeeper-login;
         display: none;
     }
 }
