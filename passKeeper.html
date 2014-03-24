@@ -12,42 +12,31 @@
 </head>
 
 <body>
-    <!--<div id="passkeeper-box" class="passkeeper_popup_box">-->
-    <!--<div class="passkeeper_popup_box_header">-->
-    <!--<ul>-->
-    <!--<li>Login</li>-->
-    <!--<li>Query</li>-->
-    <!--</ul>-->
-    <!--</div>-->
-    <!--<p>-->
-    <!--<input type="password" name="password" value="" placeholder="Password for Passkeeper">-->
-    <!--</p>-->
-    <!--<p class="submit">-->
-    <!--<input type="button" name="btn_go" value="Go">-->
-    <!--<span class="passkeeper_error_msg">Wrong password, click <a href="#">here</a> to reset</span>-->
-    <!--</p>-->
-    <!--</div>-->
-
-    <div id="passkeeper-box" class="passkeeper_popup_box">
+    <div id="passkeeper-box" class="passkeeper-popup-box">
         <nav>
             <ul>
-                <li><a href="#" rel="external">Login</a> 
+                <li><a href="javascript:void(0);" id="menu-login">Login</a> 
                 </li>
-                <li><a href="#" rel="external">Query</a> 
+                <li><a href="javascript:void(0);" id="menu-query">Query</a> 
                 </li>
             </ul>
         </nav>
+        <div id="passkeeper-login" class="passkeeper-login">
+            <div>
+                <input type="password" name="pk-login-password" id="pk-login-password" value="" placeholder="Password for Passkeeper" />
+                <a href="#" id="pk-btn-login">Go</a>
+            </div>
+        </div>
+        <div id="passkeeper-query" class="passkeeper-query">
+            <div>
+                <input type="text" name="pk-domainname" value="" placeholder="Domain Name">
+                <input id="pk-query-password" type="password" name="pk-query-password" placeholder="Password for Passkeeper">
+                <a id="pk-btn-query" href="#">Go</a>
+            </div>
+        </div>
         <div id="pk-message-box" class="passkeeper-message">
             <span id="pk-message"> Wrong password</span>
             <a href="#" class="btn-close">x</a>
-        </div>
-        <div id="passkeeper-login" class="passkeeper-login">
-            <div>
-                <input type="password" name="pkpassword" id="pkpassword" value="" placeholder="Password for Passkeeper" />
-            </div>
-            <div>
-                <input type="button" name="pksubmit" id="pksubmit" value="Go" />
-            </div>
         </div>
     </div>
 </body>

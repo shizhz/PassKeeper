@@ -5,6 +5,7 @@
   width: 154px;
 }
 .shadow {
+  -webkit-box-shadow: 0 1px 2px 0 #cccccc;
   box-shadow: 0 1px 2px 0 #cccccc;
 }
 .border {
@@ -25,17 +26,16 @@
   background: -webkit-linear-gradient(top, #cbcbcb 0%, #bababa 50%, #aaaaaa 51%, #c7c7c7 100%);
 }
 .alert-box {
-  position: relative;
-  border-style: solid;
+  border-style: none;
   border-width: 1px;
   font-weight: normal;
-  margin-top: 2px;
   font-size: 13pt;
   margin-left: 5px;
   padding-left: 5px;
   height: 30px;
+  width: 206.66666667px;
   line-height: 30px;
-  vertical-align: middle;
+  margin-top: 10px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
 }
@@ -52,6 +52,11 @@
   border-color: #de770f;
   color: white;
 }
+.tiny {
+  width: 60px;
+  height: 30x;
+  line-height: 30px;
+}
 .error {
   background-color: #f04124;
   border-color: #e43316;
@@ -65,56 +70,59 @@ body {
   background: #ffffff;
   font-size: 11pt;
 }
-.passkeeper_popup_box {
+.passkeeper-popup-box {
   width: 311px;
   height: 200px;
-  border: 1px solid #c7c7c7;
   border-top: none;
+  border: 1px solid #c7c7c7;
+  -webkit-box-shadow: 0 1px 2px 0 #cccccc;
+  box-shadow: 0 1px 2px 0 #cccccc;
 }
-.passkeeper_popup_box .passkeeper-message {
-  display: block;
+.passkeeper-popup-box .passkeeper-message {
   position: relative;
-  border-style: solid;
+  display: none;
+  border-style: none;
   border-width: 1px;
   font-weight: normal;
-  margin-top: 2px;
   font-size: 13pt;
   margin-left: 5px;
   padding-left: 5px;
   height: 30px;
+  width: 206.66666667px;
   line-height: 30px;
-  vertical-align: middle;
+  margin-top: 10px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   background-color: #f04124;
   border-color: #e43316;
   color: white;
 }
-.passkeeper_popup_box .passkeeper-message a {
+.passkeeper-popup-box .passkeeper-message a {
   text-decoration: none;
   color: white;
   cursor: auto;
 }
-.passkeeper_popup_box .passkeeper-message a:hover {
+.passkeeper-popup-box .passkeeper-message a:hover {
   color: #222222;
 }
-.passkeeper_popup_box nav {
+.passkeeper-popup-box nav {
   margin: 0 auto 0;
   width: 310px;
   height: 40px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #c7c7c7;
+  -webkit-box-shadow: 0 1px 2px 0 #cccccc;
   box-shadow: 0 1px 2px 0 #cccccc;
 }
-.passkeeper_popup_box nav ul {
+.passkeeper-popup-box nav ul {
   padding: 0px;
   margin: 0px;
 }
-.passkeeper_popup_box nav ul li {
+.passkeeper-popup-box nav ul li {
   display: inline;
 }
-.passkeeper_popup_box nav ul li a {
+.passkeeper-popup-box nav ul li a {
   text-decoration: none;
   display: inline-block;
   float: left;
@@ -130,12 +138,113 @@ body {
   border-color: transparent #bbbbbb transparent #ffffff;
   background: -webkit-linear-gradient(top, #f1f1f1 0%, #e3e3e3 50%, #cbcbcb 51%, #e1e1e1 100%);
 }
-.passkeeper_popup_box nav ul li a:hover {
+.passkeeper-popup-box nav ul li a:hover {
   background: -webkit-linear-gradient(top, #cbcbcb 0%, #bababa 50%, #aaaaaa 51%, #c7c7c7 100%);
 }
-.passkeeper_popup_box nav ul li:first-child a {
+.passkeeper-popup-box nav ul li:first-child a {
   border-left: none;
 }
-.passkeeper_popup_box nav ul li:last-child a {
+.passkeeper-popup-box nav ul li:last-child a {
   border-right: none;
+}
+.passkeeper-popup-box .passkeeper-login {
+  width: 310px;
+  height: 50px;
+  display: table;
+}
+.passkeeper-popup-box .passkeeper-login div {
+  display: table-cell;
+  vertical-align: middle;
+}
+.passkeeper-popup-box .passkeeper-login div input[type=text],
+.passkeeper-popup-box .passkeeper-login div input[type=password] {
+  margin-left: 5px;
+  margin-top: 10px;
+  padding-left: 5px;
+  width: 206.66666667px;
+  height: 30px;
+  line-height: 30px;
+  color: #000000;
+  outline: 1px solid #cccccc;
+  border: 1px solid #c7c7c7;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 2px 0 #cccccc;
+  box-shadow: 0 1px 2px 0 #cccccc;
+}
+.passkeeper-popup-box .passkeeper-login div input[type=text]:focus,
+.passkeeper-popup-box .passkeeper-login div input[type=password]:focus {
+  border-color: #b3b3b3;
+  outline-color: #999999;
+  outline-offset: 0;
+}
+.passkeeper-popup-box .passkeeper-login div a {
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  width: 60px;
+  height: 30x;
+  line-height: 30px;
+  display: inline-block;
+  color: white;
+  font-size: 11pt;
+  font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+  text-decoration: none;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  background: #008cba;
+}
+.passkeeper-popup-box .passkeeper-login div a:hover {
+  background: #0079a1;
+}
+.passkeeper-popup-box .passkeeper-query {
+  width: 310px;
+  height: 50px;
+  display: table;
+  display: none;
+}
+.passkeeper-popup-box .passkeeper-query div {
+  display: table-cell;
+  vertical-align: middle;
+}
+.passkeeper-popup-box .passkeeper-query div input[type=text],
+.passkeeper-popup-box .passkeeper-query div input[type=password] {
+  margin-left: 5px;
+  margin-top: 10px;
+  padding-left: 5px;
+  width: 206.66666667px;
+  height: 30px;
+  line-height: 30px;
+  color: #000000;
+  outline: 1px solid #cccccc;
+  border: 1px solid #c7c7c7;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 2px 0 #cccccc;
+  box-shadow: 0 1px 2px 0 #cccccc;
+}
+.passkeeper-popup-box .passkeeper-query div input[type=text]:focus,
+.passkeeper-popup-box .passkeeper-query div input[type=password]:focus {
+  border-color: #b3b3b3;
+  outline-color: #999999;
+  outline-offset: 0;
+}
+.passkeeper-popup-box .passkeeper-query div a {
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  width: 60px;
+  height: 30x;
+  line-height: 30px;
+  display: inline-block;
+  color: white;
+  font-size: 11pt;
+  font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+  text-decoration: none;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  background: #008cba;
+}
+.passkeeper-popup-box .passkeeper-query div a:hover {
+  background: #0079a1;
 }

@@ -1,8 +1,11 @@
 @theme: #ccc;
+@base_blue: #008cba;
 @popup_width: 310px;
 @popup_height: 200px;
 @menu_number: 2;
 @menu_height: 40px;
+@msg_height: 30px;
+@input_height: 30px;
 @align_left: 5px;
 @font_size: 11pt;
 .popup_width {
@@ -12,6 +15,7 @@
     width: (@popup_width / @menu_number) - 1;
 }
 .shadow {
+    -webkit-box-shadow: 0 1px 2px 0 @theme;
     box-shadow: 0 1px 2px 0 @theme;
 
 }
@@ -46,17 +50,16 @@
 }
 
 .alert-box {
-    position: relative;
-    border-style: solid;
+    border-style: none;
     border-width: 1px;
     font-weight: normal;
-    margin-top: 2px;
     font-size: @font_size + 2;
     margin-left: @align_left;
     padding-left: @align_left;
-    height: 30px;
-    line-height:30px;
-    vertical-align: middle;
+    height: @msg_height;
+    width: (@popup_width / 3) * 2;
+    line-height: @msg_height;
+    margin-top: 10px;
     .round;
     a {
         text-decoration: none;
@@ -71,6 +74,24 @@
      background-color: #f08a24;
      border-color: #de770f;
      color: white;
+}
+
+.tiny {
+    width: 60px;
+    height: 30x;
+    line-height: 30px;
+}
+
+.button(@color) {
+    display: inline-block;
+    color: white;
+    font-size: @font_size;
+    font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+    text-decoration: none;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    background: @color;
 }
 
 .error {
@@ -88,13 +109,15 @@ body {
     background: lighten(@theme, 30);
     font-size: @font_size;
 }
-.passkeeper_popup_box {
+.passkeeper-popup-box {
     width: @popup_width + 1;
     height: @popup_height;
-    .border;
     border-top: none;
+    .border;
+    .shadow;
     .passkeeper-message {
-        display: block;
+        position: relative;
+        display: none;
         .alert-box;
         .error;
     }
@@ -134,5 +157,44 @@ body {
                 border-right: none;
             }
         }
+    }
+    .passkeeper-login {
+        width: @popup_width;
+        height: 50px;
+        display: table;
+        div {
+            display: table-cell;
+            vertical-align: middle;
+            input[type=text], input[type=password] {
+                 margin-left: 5px;
+                 margin-top:10px;
+                 padding-left: 5px;
+                 width: @popup_width * (2 / 3);
+                 height: @input_height;
+                 line-height: @input_height;
+                 color: darken(@theme, 80%);
+                 outline: 1px solid @theme;
+                 .border;
+                 .round;
+                 .shadow;
+                 &:focus {
+                     border-color: darken(@theme, 10%);
+                     outline-color: darken(@theme, 20%);
+                     outline-offset: 0;
+                 }
+            }
+            a {
+                .round;
+                .tiny;
+                .button(@base_blue);
+                &:hover {
+                    background: darken(@base_blue, 5%);
+                }
+            }
+        }
+    }
+    .passkeeper-query {
+        .passkeeper-login;
+        display: none;
     }
 }
