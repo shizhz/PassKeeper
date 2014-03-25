@@ -15,7 +15,17 @@
 
         var DataSource = {
             contains: function (domainname) {
-                <`0:// body...`>
+                console.log('contains called' + new Date());
+                chrome.storage.local.set({'jd.com': 'messi@jd'}, function () {
+                    console.log('message saved in local storage');
+                });
+
+                var data = chrome.storage.local.get('jd.com', function (data) {
+                    console.log(data);
+                });
+                chrome.runtime.sendMessage({action: 'constains', args: {key: domainname}}, function (response) {
+                    console.log('DataSource: ' + response.hello);
+                });
             },
         };
 
@@ -112,6 +122,8 @@
         };
 
         return this.each(function() {
+            return this;
+            DataSource.contains(location.hostname);
             PopupBox.init();
             HotKeys.init();
             $(popupBox).appendTo('body');
