@@ -105,14 +105,25 @@
     right: 10px;
 }
 
+.clear-host-css {
+    background-image:none;
+    padding-left: 0px;
+    /*list-style-type:none;*/
+}
+
 body {
     background: lighten(@theme, 30);
     font-size: @font_size;
 }
 .passkeeper-popup-box {
+    display:none;
     width: @popup_width + 1;
     height: @popup_height;
     border-top: none;
+    background-color: white;
+    position: absolute;
+    left: 40%;
+    top: 30%;
     .border;
     .shadow;
     .passkeeper-message {
@@ -133,6 +144,7 @@ body {
             margin: 0px;
             li {
                 display: inline;
+                .clear-host-css;
                 .menu-tab {
                     text-decoration: none;
                     display: inline-block;

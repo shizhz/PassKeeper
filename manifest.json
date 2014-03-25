@@ -22,16 +22,16 @@
     "default_popup": "passKeeper.html"
   },
 
-  //"background": {
-      ////"scripts": ["js/passKeeper.js"],
-      ////"persistent": false,
-      //"page": "passKeeper.html"
-  //},
+  "background": {
+      "scripts": ["js/passkeeper.bg.js"],
+      "persistent": false,
+  },
 
   "content_scripts": [
       {
           "matches": ["<all_urls>"],
-          "js": ["js/jquery-2.1.0.js", "js/passKeeper.js"]
+          "css": ["css/reset.css", "./popup.css"],
+          "js": ["js/jquery-2.1.0.js", "js/passkeeper.popup.js"]
       }
   ]
 }
