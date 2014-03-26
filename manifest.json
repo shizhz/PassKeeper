@@ -23,15 +23,16 @@
   },
 
   "background": {
-      "scripts": ["js/passkeeper.bg.js"],
-      "persistent": false
-  },
+      //"scripts": ["js/passkeeper.bg.js"],
+      "page": "background.html"
 
+      //"persistent": false
+  },
   "content_scripts": [
       {
           "matches": ["<all_urls>"],
           "css": ["css/reset.css", "./popup.css"],
-          "js": ["js/client.js", "js/jquery-2.1.0.js", "js/passkeeper.popup.js"]
+          "js": ["js/jquery-2.1.0.js", "js/passkeeper.popup.js"]
           //"all_frames": true
       }
   ]
