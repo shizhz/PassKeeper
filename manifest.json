@@ -1,39 +1,45 @@
 {
-  "manifest_version": 2,
-  "name": "PassKeeper",
-  "version": "1.0",
+    "manifest_version": 2,
+    "name": "PassKeeper",
+    "version": "1.0",
 
-  "description": "Manage all password",
+    "description": "Manage all password",
 
-  "icons": {
-      "16": "icons/passkeeper-16.png",
-      "48": "icons/passkeeper-48.png",
-      "128": "icons/passkeeper-128.png"
-  },
+    "icons": {
+        "16": "icons/passkeeper-16.png",
+        "48": "icons/passkeeper-48.png",
+        "128": "icons/passkeeper-128.png"
+    },
 
-  "permissions": [
-    "*://*/*",
-    "storage",
-    "tabs"
-  ],
+    "permissions": [
+        "*://*/*",
+        "storage",
+        "tabs"
+    ],
 
-  "browser_action": {
-    "default_icon": "icons/passkeeper-22.png",
-    "default_popup": "passKeeper.html"
-  },
+    "browser_action": {
+        "default_icon": "icons/passkeeper-22.png",
+        "default_popup": "passkeeper.html"
+    },
 
-  "background": {
-      //"scripts": ["js/passkeeper.bg.js"],
-      "page": "background.html"
+    "background": {
+        "scripts": ["js/passkeeper.bg.js"]
+        //"page": "background.html"
 
-      //"persistent": false
-  },
-  "content_scripts": [
-      {
-          "matches": ["<all_urls>"],
-          "css": ["css/reset.css", "./popup.css"],
-          "js": ["js/jquery-2.1.0.js", "js/passkeeper.popup.js"]
-          //"all_frames": true
-      }
-  ]
+        //"persistent": false
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "css": ["css/reset.css", "./popup.css"],
+        //"js": ["oauth2/oauth2_inject.js"],// "js/jquery-2.1.0.js", "js/passkeeper.popup.js"],
+        "js": ["js/jquery-2.1.0.js", "js/passkeeper.popup.js"]
+        //"run_at": "document_start"
+
+        //"all_frames": true
+    }]
+
+    //"web_accessible_resources": [
+         //"oauth2/oauth2.html"
+        //]
+
 }

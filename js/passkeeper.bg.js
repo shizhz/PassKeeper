@@ -7,40 +7,42 @@
         sendResponse({
             hello: 'world'
         });
+
+        var google = new OAuth2('google', {
+            client_id: '952993494713-h12m6utvq8g8d8et8n2i68plbrr6cr4d.apps.googleusercontent.com',
+            api_scope: 'https://www.googleapis.com/auth/drive.file'
+        });
+
+        google.authorize(
+            function() {
+                //var TASK_CREATE_URL = 'https://www.googleapis.com/tasks/v1/lists/@default/tasks';
+                var TASK_CREATE_URL = 'https://www.googleapis.com/drive/v2/changes';
+
+                function createTodo(task) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function(event) {
+                        if (xhr.readyState == 4) {
+                            if (xhr.status == 200) {
+                                console.log(xhr.responseText);
+                            } else {
+                                console.log('other status code: ' + xhr.status);
+                            }
+                        }
+                    };
+
+                    //var message = JSON.stringify({
+                    //title: task
+                    //});
+
+                    xhr.open('GET', TASK_CREATE_URL, true);
+
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.setRequestHeader('Authorization', 'OAuth ' + google.getAccessToken());
+
+                    xhr.send();
+                }
+            });
     });
     console.log('BG Script loaded!');
 
 }).call(this);
-
-var oauth = ChromeExOAuth.initBackgroundPage({
-    'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
-    'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
-    'access_url': 'https://www.google.com/accounts/OAuthGetAccessToken',
-    'consumer_key': 'anonymous',
-    'consumer_secret': 'anonymous',
-    'scope': 'https://www.googleapis.com/auth/drive.file',
-    'app_name': 'PassKeeper'
-});
-
-function callback(resp, xhr) {
-    // ... Process text response ...
-    console.log('resp');
-};
-
-function onAuthorized() {
-    //    var url = 'https://docs.google.com/feeds/default/private/full';
-    var url = 'https://www.googleapis.com/drive/v2/changes';
-    var request = {
-        'method': 'GET',
-        'parameters': {
-            'includeDeleted': true,
-            'includeSubscribed': true
-            // 'alt': 'json'
-        }
-    };
-
-    // Send: GET https://docs.google.com/feeds/default/private/full?alt=json
-    oauth.sendSignedRequest(url, callback, request);
-};
-
-oauth.authorize(onAuthorized);

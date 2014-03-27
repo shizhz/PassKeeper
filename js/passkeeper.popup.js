@@ -9,22 +9,19 @@
         var settings = $.extend(defaultSettings, options);
         var popupBox = $(this);
 
-        var $$ = function (jquerySelector) {
+        var $$ = function(jquerySelector) {
             return $(jquerySelector, popupBox);
         };
 
         var DataSource = {
-            contains: function (domainname) {
-                console.log('contains called' + new Date());
-                chrome.storage.local.set({'jd.com': 'messi@jd'}, function () {
-                    console.log('message saved in local storage');
-                });
-
-                var data = chrome.storage.local.get('jd.com', function (data) {
-                    console.log(data);
-                });
-                chrome.runtime.sendMessage({action: 'constains', args: {key: domainname}}, function (response) {
-                    console.log('DataSource: ' + response.hello);
+            contains: function(domainname) {
+                chrome.runtime.sendMessage({
+                    action: 'contains',
+                    args: {
+                        key: domainname
+                    }
+                }, function(response) {
+                    return !!response.result;
                 });
             },
         };
@@ -68,6 +65,14 @@
                 });
             },
 
+            goLogin: function () {
+                
+            },
+
+            goQuery: function () {
+                
+            },
+
             init: function() {
                 $$('#' + settings.defaultTab).removeClass('activeffect').addClass('activeffect');
                 this.focusFirst();
@@ -91,16 +96,19 @@
 
             trigger: function() {
                 // Ctrl - i
-                $(popupBox).toggle(this.keys['17'] && this.keys['73']);
+                if (this.keys['17'] && this.keys['73']) {
+                    $(popupBox).toggle();
+                    $('#pk-login-password').focus();
+                }
             },
 
-            hotkey: function (action) {
+            hotkey: function(action) {
                 var display = false;
                 var this_ = this;
                 var down = action == 'down';
                 var up = action == 'up';
 
-                return function (event) {
+                return function(event) {
                     var key = event.which;
                     this_.keys[key] == false && (this_.keys[key] = true);
                 }
@@ -116,13 +124,12 @@
                 }).keyup(function(event) {
                     var key = event.which;
                     this_.keys[key] && (this_.keys[key] = false);
+                    console.log(this_.keys);
                 });
-                // TODO: register hotkeys to popupBox
             }
         };
 
         return this.each(function() {
-            return this;
             DataSource.contains(location.hostname);
             PopupBox.init();
             HotKeys.init();

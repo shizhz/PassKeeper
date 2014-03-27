@@ -82,6 +82,7 @@ body {
   border-top: none;
   background-color: white;
   position: absolute;
+  z-index: 1000000;
   left: 40%;
   top: 30%;
   border: 1px solid #c7c7c7;
