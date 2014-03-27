@@ -66,11 +66,11 @@
             },
 
             goLogin: function () {
-                
+                // bind login go action
             },
 
             goQuery: function () {
-                
+                // bind query go action
             },
 
             init: function() {
