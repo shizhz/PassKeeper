@@ -21,6 +21,7 @@
                         key: domainname
                     }
                 }, function(response) {
+                    console.log('response');
                     return !!response.result;
                 });
             },
@@ -44,7 +45,7 @@
                 });
             },
 
-            clicker: function() {
+            onClickTab: function() {
                 var menus = this.menus;
                 var this_ = this;
 
@@ -65,18 +66,27 @@
                 });
             },
 
-            goLogin: function () {
-                // bind login go action
+            onLogin: function() {
+                $$('#pk-btn-login').on('click', function (event) {
+                    // TODO: login action
+                    console.log('login btn clicked');
+                });
             },
 
-            goQuery: function () {
-                // bind query go action
+            onQuery: function() {
+                // TODO: register query go action
+                $$('#pk-btn-query').on('click', function (event) {
+                    // TODO: query action
+                    console.log('query btn clicked');
+                });
             },
 
             init: function() {
                 $$('#' + settings.defaultTab).removeClass('activeffect').addClass('activeffect');
                 this.focusFirst();
-                this.clicker();
+                this.onClickTab();
+                this.onLogin();
+                this.onQuery();
             }
         };
 
@@ -92,13 +102,18 @@
                 '73': false, // i
                 '72': false, // h
                 '76': false, // l
+                '13': false, // center
             },
 
             trigger: function() {
                 // Ctrl - i
                 if (this.keys['17'] && this.keys['73']) {
                     $(popupBox).toggle();
-                    $('#pk-login-password').focus();
+                    $$('#pk-login-password').focus();
+                }
+
+                if (this.keys['13']) {
+                    $$('a[id^=pk-btn]:visible').trigger('click');
                 }
             },
 
@@ -124,7 +139,6 @@
                 }).keyup(function(event) {
                     var key = event.which;
                     this_.keys[key] && (this_.keys[key] = false);
-                    console.log(this_.keys);
                 });
             }
         };
