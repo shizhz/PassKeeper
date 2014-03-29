@@ -26,16 +26,10 @@
         "scripts": ["js/passkeeper.bg.js"]
         //"persistent": false
     },
+
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "css": ["css/reset.css", "./popup.css"],
         "js": ["js/jquery-2.1.0.js", "js/passkeeper.popup.js"]
-
-        //"all_frames": true
     }]
-
-    //"web_accessible_resources": [
-         //"oauth2/oauth2.html"
-        //]
-
 }

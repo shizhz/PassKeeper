@@ -15,13 +15,14 @@
 
         var DataSource = {
             contains: function(domainname) {
+                console.log('contains called');
                 chrome.runtime.sendMessage({
                     action: 'contains',
                     args: {
                         key: domainname
                     }
                 }, function(response) {
-                    console.log('response');
+                    console.log(response.result);
                     return !!response.result;
                 });
             },
