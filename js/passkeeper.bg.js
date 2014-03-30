@@ -46,8 +46,6 @@
         },
 
         contains: function(params) {
-            console.log('contains called: ');
-            console.log(params);
             var domainname = params.domainname;
             return this.keys().indexOf(domainname) >= 0;
         },
@@ -106,7 +104,7 @@
                 if (this[action]) {
                     result = this[action].call(this, params);
                 } else {
-                    throw new DBError("No method '" + action + "' defined found in DBDriver");
+                    throw new DBError("No method '" + action + "' definition found in DBDriver");
                 }
 
                 response.result = result;
@@ -114,8 +112,6 @@
             } catch (e) {
                 response.error = e.message;
             }
-            console.log('dispatch done, got a response: ');
-            console.log(response);
 
             return response;
         },
