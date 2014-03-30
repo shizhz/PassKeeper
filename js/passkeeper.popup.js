@@ -14,16 +14,15 @@
         };
 
         var DataSource = {
-            contains: function(domainname) {
-                console.log('contains called');
+            contains: function(key, yesFun, noFun) {
                 chrome.runtime.sendMessage({
                     action: 'contains',
-                    args: {
-                        key: domainname
+                    params: {
+                        domainname: key
                     }
                 }, function(response) {
-                    console.log(response.result);
-                    return !!response.result;
+                    var callback = (!! response.result) ? yesFun : noFun;
+                    callback.call();
                 });
             },
         };
@@ -68,7 +67,7 @@
             },
 
             onLogin: function() {
-                $$('#pk-btn-login').on('click', function (event) {
+                $$('#pk-btn-login').on('click', function(event) {
                     // TODO: login action
                     console.log('login btn clicked');
                 });
@@ -76,7 +75,7 @@
 
             onQuery: function() {
                 // TODO: register query go action
-                $$('#pk-btn-query').on('click', function (event) {
+                $$('#pk-btn-query').on('click', function(event) {
                     // TODO: query action
                     console.log('query btn clicked');
                 });
@@ -145,10 +144,13 @@
         };
 
         return this.each(function() {
-            DataSource.contains(location.hostname);
-            PopupBox.init();
-            HotKeys.init();
-            $(popupBox).appendTo('body');
+            DataSource.contains(location.hostname, function() {
+                PopupBox.init();
+                HotKeys.init();
+                $(popupBox).appendTo('body');
+            }, function () {
+                console.log('This page is not recorded, do not init passkeeper content script');
+            });
         });
     }
 })(jQuery);
