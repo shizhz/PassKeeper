@@ -185,18 +185,6 @@
                 }
             },
 
-            hotkey: function(action) {
-                var display = false;
-                var this_ = this;
-                var down = action == 'down';
-                var up = action == 'up';
-
-                return function(event) {
-                    var key = event.which;
-                    this_.keys[key] === false && (this_.keys[key] = true);
-                };
-            },
-
             init: function() {
                 var this_ = this;
                 $(document).keydown(function(event) {
