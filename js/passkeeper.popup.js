@@ -1,6 +1,12 @@
 (function($) {
     'use strict';
 
+    function getSiteKey() {
+        var url = location.href;
+        var mark = url.indexOf('?');
+        return (mark == -1 ? url : url.substring(0, mark));
+    }
+
     var popupTemplateLoginAndQuery = $('' +
         '    <div id="passkeeper-box" class="passkeeper-popup-box" tabindex="1">' +
         '        <nav>' +
@@ -134,9 +140,9 @@
                 });
             },
 
-            onNew: function () {
+            onNew: function() {
                 // TODO: register new go action
-                $$('#pk-btn-new').on('click', function (event) {
+                $$('#pk-btn-new').on('click', function(event) {
                     console.log('new btn clicked');
                 });
             },
@@ -149,10 +155,8 @@
                 this.onQuery();
             },
 
-            initNew: function () {
-                var url = location.href;
-                var mark = url.indexOf('?');
-                $$('input:visible[readonly]').val(mark == -1 ? url : url.substring(0, mark));
+            initNew: function() {
+                $$('input:visible[readonly]').val(getSiteKey());
                 this.focusFirst();
                 this.onNew();
             }
@@ -199,7 +203,7 @@
             }
         };
 
-        DataSource.contains(location.hostname, function() {
+        DataSource.contains(getSiteKey(), function() {
             popupBox = $(popupTemplateLoginAndQuery);
             PopupBox.initLoginAndQuery();
             HotKeys.init();
