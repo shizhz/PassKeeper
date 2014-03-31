@@ -33,8 +33,8 @@
         db: undefined,
 
         get: function(params) {
-            var domainname = params.domainname;
-            return this.db.bucket[domainname] || '';
+            var key = params.key;
+            return this.db.bucket[key] || '';
         },
 
         size: function() {
@@ -46,16 +46,16 @@
         },
 
         contains: function(params) {
-            var domainname = params.domainname;
-            return this.keys().indexOf(domainname) >= 0;
+            var key = params.key;
+            return this.keys().indexOf(key) >= 0;
         },
 
         save: function(params) {
-            var domainname = params.domainname;
+            var key = params.key;
             var record = params.record;
-            var pre = this.get(domainname);
+            var pre = this.get(key);
 
-            this.db.bucket[domainname] = record;
+            this.db.bucket[key] = record;
 
             return pre;
         },
