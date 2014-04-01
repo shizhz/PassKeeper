@@ -41,7 +41,7 @@
         '    <nav>' +
         '        <ul>' +
         '            <li>' +
-        '                <a href="javascript:void(0);" id="menu-new" class="menu-tab">New</a>' +
+        '                <a href="javascript:void(0);" id="menu-new" class="menu-tab">New || Update</a>' +
         '            </li>' +
         '        </ul>' +
         '    </nav>' +
@@ -156,9 +156,32 @@
             },
 
             initNew: function() {
-                $$('input:visible[readonly]').val(getSiteKey());
+                $$('input[readonly]').val(getSiteKey());
                 this.focusFirst();
                 this.onNew();
+            },
+
+            init: function() {
+                var this_ = this;
+                if ($(':password:visible').length > 0) {
+                    DataSource.contains(getSiteKey(), function() {
+                        console.log('init popupbox to login and query');
+
+                        popupBox = $(popupTemplateLoginAndQuery);
+                        this_.initLoginAndQuery();
+                        HotKeys.init();
+                        $(popupBox).appendTo('body');
+                    }, function() {
+                        console.log('init popupbox to new');
+
+                        popupBox = $(popupTemplateNew);
+                        this_.initNew();
+                        HotKeys.init();
+                        $(popupBox).appendTo('body');
+                    });
+                } else {
+                     console.log('No input[type=password] found, no need to init passkeeper');
+                }
             }
         };
 
@@ -203,17 +226,7 @@
             }
         };
 
-        DataSource.contains(getSiteKey(), function() {
-            popupBox = $(popupTemplateLoginAndQuery);
-            PopupBox.initLoginAndQuery();
-            HotKeys.init();
-            $(popupBox).appendTo('body');
-        }, function() {
-            popupBox = $(popupTemplateNew);
-            PopupBox.initNew();
-            HotKeys.init();
-            $(popupBox).appendTo('body');
-        });
+        PopupBox.init();
     };
 })(jQuery);
 
