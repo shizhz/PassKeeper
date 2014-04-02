@@ -7,6 +7,7 @@
         return (mark == -1 ? url : url.substring(0, mark));
     }
 
+
     var defaultSettings = {
         'defaultTab': 'menu-login',
         'menu_id_login': 'menu-login',
@@ -30,7 +31,6 @@
                         key: k
                     }
                 }, function(response) {
-                    console.log('callback after response');
                     callback( !! response.result);
                 });
             },
@@ -113,6 +113,7 @@
 
             flushUI: function() {
                 $$('#' + this.current).removeClass('activeffect').addClass('activeffect');
+                $$('#pk-new-site').val(getSiteKey());
                 $$('#' + this.current).trigger('click');
             },
 
@@ -140,11 +141,9 @@
 
             init: function() {
                 if ($(':password:visible').length > 0) {
-                    console.log('input[type=password] found, init');
                     DataSource.contains(getSiteKey(), (function(result) {
 
                         this.current = result ? settings.menu_id_login : settings.menu_id_new;
-                        $$('#pk-new-site').val(getSiteKey());
 
                         this.registEvents();
                         HotKeys.init();
