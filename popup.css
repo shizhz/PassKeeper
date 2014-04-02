@@ -78,7 +78,7 @@ body {
 .passkeeper-popup-box {
   display: block;
   width: 411px;
-  height: 200px;
+  height: 250px;
   border-top: none;
   background-color: white;
   position: absolute;
@@ -227,6 +227,6 @@ body {
   background: #0079a1;
 }
 .passkeeper-popup-box .passkeeper-query,
-.passkeeper-popup-box .passkeeper-login {
+.passkeeper-popup-box .passkeeper-new {
   display: none;
 }

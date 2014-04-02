@@ -7,81 +7,30 @@
         return (mark == -1 ? url : url.substring(0, mark));
     }
 
-    var popupTemplateLoginAndQuery = $('' +
-        '    <div id="passkeeper-box" class="passkeeper-popup-box" tabindex="1">' +
-        '        <nav>' +
-        '            <ul>' +
-        '                <li><a href="javascript:void(0);" id="menu-login" class="menu-tab">Login</a>' +
-        '                </li>' +
-        '                <li><a href="javascript:void(0);" id="menu-query" class="menu-tab">Query</a>' +
-        '                </li>' +
-        '            </ul>' +
-        '        </nav>' +
-        '        <div id="passkeeper-login" class="passkeeper-login">' +
-        '            <div>' +
-        '                <input type="password" name="pk-login-password" id="pk-login-password" value="" placeholder="Password for Passkeeper" />' +
-        '                <a href="#" id="pk-btn-login">Go</a>' +
-        '            </div>' +
-        '        </div>' +
-        '        <div id="passkeeper-query" class="passkeeper-query">' +
-        '            <div>' +
-        '                <input type="text" name="pk-domainname" value="" placeholder="Domain Name">' +
-        '                <input id="pk-query-password" type="password" name="pk-query-password" placeholder="Password for Passkeeper">' +
-        '                <a id="pk-btn-query" href="#">Go</a>' +
-        '            </div>' +
-        '        </div>' +
-        '        <div id="pk-message-box" class="passkeeper-message">' +
-        '            <span id="pk-message"> Wrong password</span>' +
-        '            <a href="#" class="btn-close">x</a>' +
-        '        </div>' +
-        '    </div>');
-
-    var popupTemplateNew = $('' +
-        '<div id="passkeeper-box" class="passkeeper-popup-box-new" tabindex="1">' +
-        '    <nav>' +
-        '        <ul>' +
-        '            <li>' +
-        '                <a href="javascript:void(0);" id="menu-new" class="menu-tab">New || Update</a>' +
-        '            </li>' +
-        '        </ul>' +
-        '    </nav>' +
-        '    <div id="passkeeper-new" class="passkeeper-new">' +
-        '        <div>' +
-        '            <input type="text" readonly name="pk-new-site" id="pk-new-site" value="" />' +
-        '            <input type="text" name="pk-new-username" id="pk-new-username" value="" placeholder="Username" />' +
-        '            <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="Password for This Site" />' +
-        '            <input type="password" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" />' +
-        '            <a href="#" id="pk-btn-new">Go</a>' +
-        '        </div>' +
-        '    </div>' +
-        '    <div id="pk-message-box" class="passkeeper-message">' +
-        '        <span id="pk-message"> Wrong password</span>' +
-        '        <a href="#" class="btn-close">x</a>' +
-        '    </div>' +
-        '</div>');
-
     var defaultSettings = {
-        'defaultTab': 'menu-login'
+        'defaultTab': 'menu-login',
+        'menu_id_login': 'menu-login',
+        'menu_id_query': 'menu-query',
+        'menu_id_new': 'menu-new'
     };
 
     $.fn.passkeeper = function(options) {
         var settings = $.extend(defaultSettings, options);
-        var popupBox = undefined;
+        var popupBox = $(this);
 
         var $$ = function(jquerySelector) {
             return $(jquerySelector, popupBox);
         };
 
         var DataSource = {
-            contains: function(k, yesFun, noFun) {
+            contains: function(k, callback) {
                 chrome.runtime.sendMessage({
                     action: 'contains',
                     params: {
                         key: k
                     }
                 }, function(response) {
-                    var callback = ( !! response.result) ? yesFun : noFun;
-                    callback.call();
+                    callback.call( !! response.result);
                 });
             },
         };
@@ -89,7 +38,8 @@
         var PopupBox = {
             menus: {
                 'menu-login': 'passkeeper-login',
-                'menu-query': 'passkeeper-query'
+                'menu-query': 'passkeeper-query',
+                'menu-new': 'passkeeper-new'
             },
 
             current: settings.defaultTab,
@@ -162,25 +112,21 @@
             },
 
             init: function() {
-                var this_ = this;
                 if ($(':password:visible').length > 0) {
-                    DataSource.contains(getSiteKey(), function() {
-                        console.log('init popupbox to login and query');
+                    DataSource.contains(getSiteKey(), (function(result) {
+                        console.log('callback of contains: ' + result);
 
-                        popupBox = $(popupTemplateLoginAndQuery);
-                        this_.initLoginAndQuery();
-                        HotKeys.init();
-                        $(popupBox).appendTo('body');
-                    }, function() {
-                        console.log('init popupbox to new');
+                        this.current = result ? settings.menu_id_login : settings.menu_id_new;
 
-                        popupBox = $(popupTemplateNew);
-                        this_.initNew();
+                        $$('#' + settings.defaultTab).removeClass('activeffect').addClass('activeffect');
+                        this.focusFirst();
+                        this.onClickTab();
+                        this.onLogin();
+                        this.onQuery();
                         HotKeys.init();
-                        $(popupBox).appendTo('body');
-                    });
+                    }).bind(this));
                 } else {
-                     console.log('No input[type=password] found, no need to init passkeeper');
+                    console.log('No input[type=password] found, no need to init passkeeper');
                 }
             }
         };
@@ -226,10 +172,52 @@
             }
         };
 
-        PopupBox.init();
+        return $(this).each(function() {
+            PopupBox.init();
+        });
     };
 })(jQuery);
 
 $(function() {
-    $.fn.passkeeper();
+    $('<div id="passkeeper-box" class="passkeeper-popup-box" tabindex="1"> ' +
+        '      <nav> ' +
+        '          <ul> ' +
+        '              <li> ' +
+        '                  <a href="javascript:void(0);" id="menu-login" class="menu-tab">Login</a> ' +
+        '              </li> ' +
+        '              <li> ' +
+        '                  <a href="javascript:void(0);" id="menu-query" class="menu-tab">Query</a> ' +
+        '              </li> ' +
+        '              <li> ' +
+        '                  <a href="javascript:void(0);" id="menu-new" class="menu-tab">New || Update</a> ' +
+        '              </li> ' +
+        '          </ul> ' +
+        '      </nav> ' +
+        '      <div id="passkeeper-login" class="passkeeper-login"> ' +
+        '          <div> ' +
+        '              <input type="password" name="pk-login-password" id="pk-login-password" value="" placeholder="Password for Passkeeper" /> ' +
+        '              <a href="#" id="pk-btn-login">Go</a> ' +
+        '          </div> ' +
+        '      </div> ' +
+        '      <div id="passkeeper-query" class="passkeeper-query"> ' +
+        '          <div> ' +
+        '              <input type="text" name="pk-domainname" value="" placeholder="Domain Name"> ' +
+        '              <input id="pk-query-password" type="password" name="pk-query-password" placeholder="Password for Passkeeper"> ' +
+        '              <a id="pk-btn-query" href="#">Go</a> ' +
+        '          </div> ' +
+        '      </div> ' +
+        '      <div id="passkeeper-new" class="passkeeper-new"> ' +
+        '          <div> ' +
+        '              <input type="text" readonly name="pk-new-site" id="pk-new-site" value="" /> ' +
+        '              <input type="text" name="pk-new-username" id="pk-new-username" value="" placeholder="Username" /> ' +
+        '              <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="Password for This Site" /> ' +
+        '              <input type="password" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
+        '              <a href="#" id="pk-btn-new">Go</a> ' +
+        '          </div> ' +
+        '      </div> ' +
+        '      <div id="pk-message-box" class="passkeeper-message"> ' +
+        '          <span id="pk-message"> Wrong password</span> ' +
+        '          <a href="#" class="btn-close">x</a> ' +
+        '      </div> ' +
+        '  </div> ').appendTo('body').passkeeper();
 });
