@@ -76,7 +76,7 @@ body {
   font-size: 11pt;
 }
 .passkeeper-popup-box {
-  display: block;
+  display: none;
   width: 411px;
   height: 250px;
   border-top: none;

@@ -30,7 +30,8 @@
                         key: k
                     }
                 }, function(response) {
-                    callback.call( !! response.result);
+                    console.log('callback after response');
+                    callback( !! response.result);
                 });
             },
         };
@@ -106,23 +107,46 @@
             },
 
             initNew: function() {
-                $$('input[readonly]').val(getSiteKey());
                 this.focusFirst();
                 this.onNew();
             },
 
+            flushUI: function() {
+                $$('#' + this.current).removeClass('activeffect').addClass('activeffect');
+                $$('#' + this.current).trigger('click');
+            },
+
+            registEvents: function() {
+                this.onClickTab();
+                this.onLogin();
+                this.onQuery();
+                this.onNew();
+            },
+
+            hide: function() {
+                $(popupBox).toggle(false);
+            },
+
+            rotateTab: function() {
+                if ($(popupBox).is(':visible')) {
+                    var menuIds = Object.keys(this.menus);
+                    var nextPosition = (menuIds.indexOf(this.current) + 1) % menuIds.length;
+                    this.current = menuIds[nextPosition];
+                } else {
+                    $(popupBox).toggle(true);
+                }
+                this.flushUI();
+            },
+
             init: function() {
                 if ($(':password:visible').length > 0) {
+                    console.log('input[type=password] found, init');
                     DataSource.contains(getSiteKey(), (function(result) {
-                        console.log('callback of contains: ' + result);
 
                         this.current = result ? settings.menu_id_login : settings.menu_id_new;
+                        $$('#pk-new-site').val(getSiteKey());
 
-                        $$('#' + settings.defaultTab).removeClass('activeffect').addClass('activeffect');
-                        this.focusFirst();
-                        this.onClickTab();
-                        this.onLogin();
-                        this.onQuery();
+                        this.registEvents();
                         HotKeys.init();
                     }).bind(this));
                 } else {
@@ -143,17 +167,18 @@
                 '73': false, // i
                 '72': false, // h
                 '76': false, // l
+                '67': false, // c
                 '13': false, // center
             },
 
             trigger: function() {
-                // Ctrl - i
                 if (this.keys['17'] && this.keys['73']) {
-                    $(popupBox).toggle();
-                    PopupBox.focusFirst();
-                }
-
-                if (this.keys['13']) {
+                    // Ctrl - i
+                    PopupBox.rotateTab();
+                } else if (this.keys['17'] && this.keys['67']) {
+                    // Ctrl - c
+                    PopupBox.hide();
+                } else if (this.keys['13']) {
                     $$('a[id^=pk-btn]:visible').trigger('click');
                 }
             },
