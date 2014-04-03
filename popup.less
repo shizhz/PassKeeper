@@ -128,10 +128,13 @@ body {
     .border;
     .shadow;
     .passkeeper-message {
-        position: relative;
+        position: absolute;
         display: none;
         .alert-box;
         .error;
+        span {
+             margin-left:5px;
+        }
     }
     nav {
         margin: 0 auto 0;
@@ -205,7 +208,7 @@ body {
             }
         }
     }
-    .passkeeper-query, .passkeeper-new {
+    .passkeeper-query, .passkeeper-new{
         display: none;
     }
 }

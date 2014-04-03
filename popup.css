@@ -90,7 +90,7 @@ body {
   box-shadow: 0 1px 2px 0 #cccccc;
 }
 .passkeeper-popup-box .passkeeper-message {
-  position: relative;
+  position: absolute;
   display: none;
   border-style: none;
   border-width: 1px;
@@ -115,6 +115,9 @@ body {
 }
 .passkeeper-popup-box .passkeeper-message a:hover {
   color: #222222;
+}
+.passkeeper-popup-box .passkeeper-message span {
+  margin-left: 5px;
 }
 .passkeeper-popup-box nav {
   margin: 0 auto 0;
