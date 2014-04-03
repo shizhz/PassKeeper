@@ -7,7 +7,6 @@
         return (mark == -1 ? url : url.substring(0, mark));
     }
 
-
     var defaultSettings = {
         'defaultTab': 'menu-login',
         'menu_id_login': 'menu-login',
@@ -24,12 +23,26 @@
         };
 
         var DataSource = {
-            contains: function(k, callback) {
+            send: function(action_, params_, callback) {
                 chrome.runtime.sendMessage({
-                    action: 'contains',
-                    params: {
-                        key: k
-                    }
+                    action: action_,
+                    params: params_
+                }, function(response) {
+                    callback(response);
+                });
+            },
+
+            login: function(passwd, ohye, ohno) {
+                this.send('login', {
+                    'passwd': passed
+                }, function(response) {
+                    ( !! response.result ? ohye() : ohno());
+                });
+            },
+
+            contains: function(k, callback) {
+                this.send('contains', {
+                    key: k
                 }, function(response) {
                     callback( !! response.result);
                 });
@@ -50,7 +63,7 @@
             },
 
             clear: function() {
-                $$('input:visible').each(function() {
+                $$('input:visible:not([readonly])').each(function() {
                     $(this).val('');
                 });
             },
@@ -113,8 +126,8 @@
 
             flushUI: function() {
                 $$('#' + this.current).removeClass('activeffect').addClass('activeffect');
-                $$('#pk-new-site').val(getSiteKey());
                 $$('#' + this.current).trigger('click');
+                $$('#pk-new-site').val(getSiteKey());
             },
 
             registEvents: function() {
@@ -142,7 +155,6 @@
             init: function() {
                 if ($(':password:visible').length > 0) {
                     DataSource.contains(getSiteKey(), (function(result) {
-
                         this.current = result ? settings.menu_id_login : settings.menu_id_new;
 
                         this.registEvents();
@@ -183,16 +195,18 @@
             },
 
             init: function() {
-                var this_ = this;
-                $(document).keydown(function(event) {
+                $(document).keydown((function(event) {
                     var key = event.which;
-
-                    this_.keys[key] === false && (this_.keys[key] = true);
-                    this_.trigger();
-                }).keyup(function(event) {
+                    if (!this.keys[key]) {
+                        this.keys[key] = true;
+                    }
+                    this.trigger();
+                }).bind(this)).keyup((function(event) {
                     var key = event.which;
-                    this_.keys[key] && (this_.keys[key] = false);
-                });
+                    if (this.keys[key]) {
+                        this.keys[key] = false;
+                    }
+                }).bind(this));
             }
         };
 
