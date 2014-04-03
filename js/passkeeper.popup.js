@@ -1,12 +1,6 @@
 (function($) {
     'use strict';
 
-    function getSiteKey() {
-        var url = location.href;
-        var mark = url.indexOf('?');
-        return (mark == -1 ? url : url.substring(0, mark));
-    }
-
     var defaultSettings = {
         'defaultTab': 'menu-login',
         'menu_id_login': 'menu-login',
@@ -14,12 +8,39 @@
         'menu_id_new': 'menu-new'
     };
 
+    function getSiteKey() {
+        var url = location.href;
+        var mark = url.indexOf('?');
+        return (mark == -1 ? url : url.substring(0, mark));
+    }
+
     $.fn.passkeeper = function(options) {
         var settings = $.extend(defaultSettings, options);
         var popupBox = $(this);
 
         var $$ = function(jquerySelector) {
             return $(jquerySelector, popupBox);
+        };
+
+        var Notifier = {
+            messages: {
+                EMPTY_INPUT: 'Input Something',
+                PASSKEEPER_PASSWORD_WRONG: 'Wrong Password for Passkeeper',
+                USERNAME_PASSWORD_MISMATCH: 'Operation Done',
+                NO_RECORD_FOUND: 'No Matching Result Found'
+            },
+
+            notify: function(msgKey) {
+                var msgBox = $$('#pk-message');
+                var left_ = $(popupBox).offset().left + ($(popupBox).width() / 2 - msgBox.width() / 2);
+                var top_ = $(popupBox).offset().top + ($(popupBox).height() - msgBox.height() - 2);
+
+                // TODO: position is wrong
+                msgBox.text(this.messages[msgKey]).parent().toggle(true).parent().offset({
+                    top: top_,
+                    left: left_
+                })
+            }
         };
 
         var DataSource = {
@@ -89,11 +110,26 @@
                 });
             },
 
-            onLogin: function() {
-                $$('#pk-btn-login').on('click', function(event) {
-                    // TODO: login action
-                    console.log('login btn clicked');
+            validate: function(ohye, ohno) {
+                var pass = true;
+                $$('input:visible:not([readonly])').each(function() {
+                    pass = pass && !! $.trim($(this).val());
                 });
+
+                (pass ? ohye() : ohno());
+
+            },
+
+            onLogin: function() {
+                $$('#pk-btn-login').on('click', (function(event) {
+                    console.log('login btn clicked');
+                    this.validate(function() {
+                        // TODO: fill username and password
+                        console.log('passed, get userinfo and fill password');
+                    }, function() {
+                        Notifier.notify('EMPTY_INPUT');
+                    });
+                }).bind(this));
             },
 
             onQuery: function() {
@@ -106,9 +142,15 @@
 
             onNew: function() {
                 // TODO: register new go action
-                $$('#pk-btn-new').on('click', function(event) {
+                $$('#pk-btn-new').on('click', (function(event) {
                     console.log('new btn clicked');
-                });
+                    this.validate(function() {
+                        // TODO: fill username and password
+                        console.log('passed, get userinfo and fill password');
+                    }, function() {
+                        Notifier.notify('EMPTY_INPUT');
+                    });
+                }).bind(this));
             },
 
             initLoginAndQuery: function() {
