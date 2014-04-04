@@ -14,6 +14,8 @@
         return (mark == -1 ? url : url.substring(0, mark));
     }
 
+    function NOP() {}
+
     $.fn.passkeeper = function(options) {
         var settings = $.extend(defaultSettings, options);
         var popupBox = $(this);
@@ -32,6 +34,65 @@
 
             notify: function(msgKey) {
                 $$('#pk-message').text(this.messages[msgKey]).parent().toggle(true);
+            }
+        };
+
+        var Validator = {
+            queue: [],
+
+            add: function(checker, rollback, stopIfUnpassed) {
+                rollback = rollback || NOP;
+                this.queue.push([checker, rollback, stopIfUnpassed]);
+                return this;
+            },
+
+            removeFrom: function(array, from) {
+                from = from || 0;
+                array = array || {};
+
+                if ((typeof from != 'number') || (typeof array.pop != 'function')) {
+                    throw 'Wrong arguments for removeFrom';
+                }
+
+                while (from > 0) {
+                    array.pop();
+                    from -= 1;
+                }
+            },
+
+            clearAll: function() {
+                this.queue = [];
+            },
+
+            validate: function(ohye, ohno) {
+                ohye = ohye || NOP;
+                ohno = ohno || NOP;
+
+                if (this.queue.map((function(item, index, queue_) {
+                    var checker = item[0];
+                    var rollback = item[1];
+                    var stopIfUnpassed = item[2];
+
+                    if (!checker()) {
+                        rollback();
+
+                        if (stopIfUnpassed) {
+                            this.removeFrom(queue_, queue_.length - index - 1);
+                        }
+
+                        return false;
+                    }
+
+                    return true;
+                }).bind(this)).every(function(ele) {
+                    return !!ele;
+                })) {
+                    ohye();
+                } else {
+                    ohno();
+                }
+
+                this.clearAll();
             }
         };
 
@@ -102,53 +163,66 @@
                 });
             },
 
-            validate: function(ohye, ohno) {
+            emptyCheck: function() {
                 var pass = true;
                 $$('input:visible:not([readonly])').each(function() {
                     pass = pass && !! $.trim($(this).val());
                 });
 
-                (pass ? ohye() : ohno());
-
+                return pass;
             },
 
             onLogin: function() {
                 $$('#pk-btn-login').on('click', (function(event) {
-                    console.log('login btn clicked');
-                    this.validate(function() {
-                        // TODO: fill username and password
-                        console.log('passed, get userinfo and fill password');
-                    }, function() {
+                    Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
+                    }, true).validate(function() {
+                        // TODO: fill password
                     });
                 }).bind(this));
             },
 
             onQuery: function() {
-                // TODO: register query go action
-                $$('#pk-btn-query').on('click', function(event) {
-                    // TODO: query action
+                $$('#pk-btn-query').on('click', (function(event) {
                     console.log('query btn clicked');
-                });
+                    Validator.add(this.emptyCheck, function() {
+                        Notifier.notify('EMPTY_INPUT');
+                    }, true).validate(function() {
+                        // TODO: query process
+                    });
+                }).bind(this));
             },
 
             onNew: function() {
-                // TODO: register new go action
                 $$('#pk-btn-new').on('click', (function(event) {
-                    console.log('new btn clicked');
-                    this.validate(function() {
-                        // TODO: fill username and password
-                        console.log('passed, get userinfo and fill password');
-                    }, function() {
+                    Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
+                    }, true).validate(function() {
+                        // TODO: new or update
                     });
                 }).bind(this));
+            },
+
+            onMessageClose: function() {
+                var msgBox = $$('#pk-message-box');
+                $('a', msgBox).on('click', function(event) {
+                    $('#pk-message-box').toggle(false);
+                });
+            },
+
+            onEnter: function() {
+                $$('input:not([readonly])').keypress(function(event) {
+                    if (event.which == 13) {
+                        $$('a[id^=pk-btn]:visible').trigger('click');
+                    }
+                });
             },
 
             flushUI: function() {
                 $$('#' + this.current).removeClass('activeffect').addClass('activeffect');
                 $$('#' + this.current).trigger('click');
                 $$('#pk-new-site').val(getSiteKey());
+                $$('#pk-message-box').toggle(false);
             },
 
             registEvents: function() {
@@ -156,6 +230,8 @@
                 this.onLogin();
                 this.onQuery();
                 this.onNew();
+                this.onMessageClose();
+                this.onEnter();
             },
 
             hide: function() {
@@ -174,16 +250,19 @@
             },
 
             init: function() {
-                if ($(':password:visible').length > 0) {
+                var this_ = this;
+                Validator.add(function() {
+                    return $(':password:visible').length > 0;
+                }, function() {
+                    console.log('No input[type=password] found, no need to init passkeeper');
+                }, true).validate(function() {
                     DataSource.contains(getSiteKey(), (function(result) {
                         this.current = result ? settings.menu_id_login : settings.menu_id_new;
 
                         this.registEvents();
                         HotKeys.init();
-                    }).bind(this));
-                } else {
-                    console.log('No input[type=password] found, no need to init passkeeper');
-                }
+                    }).bind(this_));
+                });
             }
         };
 
@@ -210,9 +289,7 @@
                 } else if (this.keys['17'] && this.keys['67']) {
                     // Ctrl - c
                     PopupBox.hide();
-                } else if (this.keys['13']) {
-                    $$('a[id^=pk-btn]:visible').trigger('click');
-                }
+                } else if (this.keys['13']) {}
             },
 
             init: function() {
