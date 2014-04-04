@@ -289,7 +289,7 @@
                 } else if (this.keys['17'] && this.keys['67']) {
                     // Ctrl - c
                     PopupBox.hide();
-                } else if (this.keys['13']) {}
+                }
             },
 
             init: function() {
