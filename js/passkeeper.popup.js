@@ -28,7 +28,9 @@
             messages: {
                 EMPTY_INPUT: 'Input Something',
                 PASSKEEPER_PASSWORD_WRONG: 'Wrong Password for Passkeeper',
-                USERNAME_PASSWORD_MISMATCH: 'Operation Done',
+                OPERATION_DONE: 'Operation Done',
+                OPERATION_FAILED: 'Operation Failed',
+                USERNAME_PASSWORD_MISMATCH: 'Username/Password NOT Match',
                 NO_RECORD_FOUND: 'No Matching Result Found'
             },
 
@@ -110,7 +112,7 @@
                 this.send('login', {
                     'passwd': passed
                 }, function(response) {
-                    ( !! response.result ? ohye() : ohno());
+                    ( !! response.result ? ohye(response.token) : ohno());
                 });
             },
 
@@ -119,6 +121,16 @@
                     key: k
                 }, function(response) {
                     callback( !! response.result);
+                });
+            },
+
+            saveOrUpdate: function(args, ohye, ohno) {
+                this.send('saveOrUpdate', args, function(response) {
+                    if (response.result) {
+                        ohye();
+                    } else {
+                        ohno();
+                    }
                 });
             },
         };
@@ -198,7 +210,30 @@
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
                     }, true).validate(function() {
-                        // TODO: new or update
+                        DataSource.login($$('#pk-new-password').val(), function(token_) {
+                            var site = $$('#pk-new-site').val();
+                            var usernm = $$('#pk-new-username').val();
+                            var passwd = $$('#pk-new-password').val();
+
+
+                            //TODO: from here next time 2014-04-05 00:08
+                            $('input:visible:password').closest('form').find(':password:visible').addClass('selected-input').siblings('input:visible').addClass('selected-input');
+                            DataSource.saveOrUpdate({
+                                token: token_,
+                                key: site,
+                                username: usernm,
+                                password: passwd
+                            }, function() {
+                                Notifier.notify('OPERATION_DONE');
+                                setTimeout(function() {
+                                    $(popupBox).fadeOut(500);
+                                }, 2000);
+                            }, function() {
+                                Notifier.notify('OPERATION_FAILED');
+                            });
+                        }, function() {
+                            Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
+                        });
                     });
                 }).bind(this));
             },
@@ -351,7 +386,7 @@ $(function() {
         '              <input type="text" readonly name="pk-new-site" id="pk-new-site" value="" /> ' +
         '              <input type="text" name="pk-new-username" id="pk-new-username" value="" placeholder="Username" /> ' +
         '              <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="Password for This Site" /> ' +
-        '              <input type="password" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
+        '              <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="Password for Passkeeper" /> ' +
         '              <a href="#" id="pk-btn-new">Go</a> ' +
         '          </div> ' +
         '      </div> ' +
