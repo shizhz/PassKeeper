@@ -65,6 +65,7 @@
 .btn-close {
   position: absolute;
   right: 10px;
+  color: #000000;
 }
 .clear-host-css {
   background-image: none;
@@ -90,8 +91,8 @@ body {
   box-shadow: 0 1px 2px 0 #cccccc;
 }
 .passkeeper-popup-box .passkeeper-message {
-  position: absolute;
   display: none;
+  position: relative;
   border-style: none;
   border-width: 1px;
   font-weight: normal;

@@ -31,15 +31,7 @@
             },
 
             notify: function(msgKey) {
-                var msgBox = $$('#pk-message');
-                var left_ = $(popupBox).offset().left + ($(popupBox).width() / 2 - msgBox.width() / 2);
-                var top_ = $(popupBox).offset().top + ($(popupBox).height() - msgBox.height() - 2);
-
-                // TODO: position is wrong
-                msgBox.text(this.messages[msgKey]).parent().toggle(true).parent().offset({
-                    top: top_,
-                    left: left_
-                })
+                $$('#pk-message').text(this.messages[msgKey]).parent().toggle(true);
             }
         };
 
@@ -153,19 +145,6 @@
                 }).bind(this));
             },
 
-            initLoginAndQuery: function() {
-                $$('#' + settings.defaultTab).removeClass('activeffect').addClass('activeffect');
-                this.focusFirst();
-                this.onClickTab();
-                this.onLogin();
-                this.onQuery();
-            },
-
-            initNew: function() {
-                this.focusFirst();
-                this.onNew();
-            },
-
             flushUI: function() {
                 $$('#' + this.current).removeClass('activeffect').addClass('activeffect');
                 $$('#' + this.current).trigger('click');
@@ -273,6 +252,10 @@ $(function() {
         '              </li> ' +
         '          </ul> ' +
         '      </nav> ' +
+        '      <div id="pk-message-box" class="passkeeper-message"> ' +
+        '          <span id="pk-message"></span> ' +
+        '          <a href="#" class="btn-close">x</a> ' +
+        '      </div> ' +
         '      <div id="passkeeper-login" class="passkeeper-login"> ' +
         '          <div> ' +
         '              <input type="password" name="pk-login-password" id="pk-login-password" value="" placeholder="Password for Passkeeper" /> ' +
@@ -294,10 +277,6 @@ $(function() {
         '              <input type="password" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
         '              <a href="#" id="pk-btn-new">Go</a> ' +
         '          </div> ' +
-        '      </div> ' +
-        '      <div id="pk-message-box" class="passkeeper-message"> ' +
-        '          <span id="pk-message"> Wrong password</span> ' +
-        '          <a href="#" class="btn-close">x</a> ' +
         '      </div> ' +
         '  </div> ').appendTo('body').passkeeper();
 });
