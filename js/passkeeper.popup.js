@@ -31,7 +31,8 @@
                 OPERATION_DONE: 'Operation Done',
                 OPERATION_FAILED: 'Operation Failed',
                 USERNAME_PASSWORD_MISMATCH: 'Username/Password NOT Match',
-                NO_RECORD_FOUND: 'No Matching Result Found'
+                NO_RECORD_FOUND: 'No Matching Result Found',
+                PASSWORDS_NOT_MATCH: 'New Passwords Does Not Match'
             },
 
             notify: function(msgKey) {
@@ -105,6 +106,12 @@
                     params: params_
                 }, function(response) {
                     callback(response);
+                });
+            },
+
+            newPasswd: function (args, ohye, ohno) {
+                this.send('newPasswd', args, function (response) {
+                    (!!response.result ? ohye() : ohno());
                 });
             },
 
@@ -205,19 +212,49 @@
                 }).bind(this));
             },
 
+            onSettings: function() {
+                $$('pk-btn-settings').on('click', (function(event) {
+                    var newPasswd = $.trim($$('pk-new-password').val());
+
+                    Validator.add(this.emptyCheck, function() {
+                        Notifier.notify('EMPTY_INPUT');
+                    }, true).add(function() {
+                        return newPasswd == $.trim($$('pk-new-password-again'));
+                    }, function() {
+                        Notifier.notify('PASSWORDS_NOT_MATCH');
+                    }, true).validate(function() {
+                        DataSource.login(newPasswd, function(token_) {
+                            var newPasswd = $('pk-new-password').val();
+
+                            DataSource.newPasswd({
+                                passwd: newPasswd,
+                                token: token_
+                            }, function() {
+                                Notifier.notify('OPERATION_DONE');
+                            }, function() {
+                                Notifier.notify('OPERATION_FAILED');
+                            });
+                        }, function() {
+                            Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
+                        });
+                    });
+                }).bind(this));
+            },
+
             onNew: function() {
                 $$('#pk-btn-new').on('click', (function(event) {
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
                     }, true).validate(function() {
-                        DataSource.login($$('#pk-new-password').val(), function(token_) {
+                        DataSource.login($$('#pk-password').val(), function(token_) {
                             var site = $$('#pk-new-site').val();
-                            var usernm = $$('#pk-new-username').val();
-                            var passwd = $$('#pk-new-password').val();
+                            var usernm = $$('#pk-site-username').val();
+                            var passwd = $$('#pk-site-password').val();
 
+                            var form = $('input:visible:password').closest('form');
+                            form.find(':password:visible').addClass('selected-input');
+                            form.find('input[type=text]:visible').addClass('selected-input');
 
-                            //TODO: from here next time 2014-04-05 00:08
-                            $('input:visible:password').closest('form').find(':password:visible').addClass('selected-input').siblings('input:visible').addClass('selected-input');
                             DataSource.saveOrUpdate({
                                 token: token_,
                                 key: site,
@@ -265,6 +302,7 @@
                 this.onLogin();
                 this.onQuery();
                 this.onNew();
+                this.onSettings();
                 this.onMessageClose();
                 this.onEnter();
             },
@@ -362,6 +400,9 @@ $(function() {
         '              <li> ' +
         '                  <a href="javascript:void(0);" id="menu-new" class="menu-tab">New || Update</a> ' +
         '              </li> ' +
+        '              <li> ' +
+        '                  <a href="javascript:void(0);" id="menu-settings" class="menu-tab">Settings</a> ' +
+        '              </li> ' +
         '          </ul> ' +
         '      </nav> ' +
         '      <div id="pk-message-box" class="passkeeper-message"> ' +
@@ -384,11 +425,19 @@ $(function() {
         '      <div id="passkeeper-new" class="passkeeper-new"> ' +
         '          <div> ' +
         '              <input type="text" readonly name="pk-new-site" id="pk-new-site" value="" /> ' +
-        '              <input type="text" name="pk-new-username" id="pk-new-username" value="" placeholder="Username" /> ' +
-        '              <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="Password for This Site" /> ' +
-        '              <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="Password for Passkeeper" /> ' +
+        '              <input type="text" name="pk-site-username" id="pk-site-username" value="" placeholder="Username" /> ' +
+        '              <input type="password" name="pk-site-password" id="pk-site-password" value="" placeholder="Password for This Site" /> ' +
+        '              <input type="password" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
         '              <a href="#" id="pk-btn-new">Go</a> ' +
         '          </div> ' +
         '      </div> ' +
+        '    <div id="passkeeper-settings" class="passkeeper-settings"> ' +
+        '        <div> ' +
+        '            <input type="password" name="pk-old-passwd" id="pk-old-passwd" value="" placeholder="Old Password for Passkeeper" /> ' +
+        '            <input type="password" name="pk-new-password" id="pk-new-password" value="" placeholder="New Password for Passkeeper" /> ' +
+        '            <input type="password" name="pk-new-password-again" id="pk-new-password-again" value="" placeholder="New Password Again" /> ' +
+        '            <a href="#" id="pk-btn-settings">Go</a> ' +
+        '        </div> ' +
+        '    </div> ' +
         '  </div> ').appendTo('body').passkeeper();
 });

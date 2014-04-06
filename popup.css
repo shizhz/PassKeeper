@@ -1,8 +1,8 @@
 .popup_width {
-  width: 410px;
+  width: 510px;
 }
 .menu_width {
-  width: 134.66666667px;
+  width: 125.5px;
 }
 .shadow {
   -webkit-box-shadow: 0 1px 2px 0 #cccccc;
@@ -36,7 +36,7 @@
   margin-left: 5px;
   padding-left: 5px;
   height: 30px;
-  width: 273.33333333px;
+  width: 340px;
   line-height: 30px;
   margin-top: 10px;
   -webkit-border-radius: 2px;
@@ -81,7 +81,7 @@ body {
 }
 .passkeeper-popup-box {
   display: none;
-  width: 411px;
+  width: 511px;
   height: 250px;
   border-top: none;
   background-color: white;
@@ -103,7 +103,7 @@ body {
   margin-left: 5px;
   padding-left: 5px;
   height: 30px;
-  width: 273.33333333px;
+  width: 340px;
   line-height: 30px;
   margin-top: 10px;
   -webkit-border-radius: 2px;
@@ -125,7 +125,7 @@ body {
 }
 .passkeeper-popup-box nav {
   margin: 0 auto 0;
-  width: 410px;
+  width: 510px;
   height: 40px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
@@ -147,7 +147,7 @@ body {
   text-decoration: none;
   display: inline-block;
   float: left;
-  width: 134.66666667px;
+  width: 125.5px;
   height: 40px;
   text-align: center;
   line-height: 300%;
@@ -169,27 +169,31 @@ body {
 }
 .passkeeper-popup-box .passkeeper-login,
 .passkeeper-popup-box .passkeeper-query,
-.passkeeper-popup-box .passkeeper-new {
-  width: 410px;
+.passkeeper-popup-box .passkeeper-new,
+.passkeeper-popup-box .passkeeper-settings {
+  width: 510px;
   height: 50px;
   display: table;
 }
 .passkeeper-popup-box .passkeeper-login div,
 .passkeeper-popup-box .passkeeper-query div,
-.passkeeper-popup-box .passkeeper-new div {
+.passkeeper-popup-box .passkeeper-new div,
+.passkeeper-popup-box .passkeeper-settings div {
   display: table-cell;
   vertical-align: middle;
 }
 .passkeeper-popup-box .passkeeper-login div input[type=text],
 .passkeeper-popup-box .passkeeper-query div input[type=text],
 .passkeeper-popup-box .passkeeper-new div input[type=text],
+.passkeeper-popup-box .passkeeper-settings div input[type=text],
 .passkeeper-popup-box .passkeeper-login div input[type=password],
 .passkeeper-popup-box .passkeeper-query div input[type=password],
-.passkeeper-popup-box .passkeeper-new div input[type=password] {
+.passkeeper-popup-box .passkeeper-new div input[type=password],
+.passkeeper-popup-box .passkeeper-settings div input[type=password] {
   margin-left: 5px;
   margin-top: 10px;
   padding-left: 5px;
-  width: 273.33333333px;
+  width: 340px;
   height: 30px;
   line-height: 30px;
   color: #000000;
@@ -203,16 +207,19 @@ body {
 .passkeeper-popup-box .passkeeper-login div input[type=text]:focus,
 .passkeeper-popup-box .passkeeper-query div input[type=text]:focus,
 .passkeeper-popup-box .passkeeper-new div input[type=text]:focus,
+.passkeeper-popup-box .passkeeper-settings div input[type=text]:focus,
 .passkeeper-popup-box .passkeeper-login div input[type=password]:focus,
 .passkeeper-popup-box .passkeeper-query div input[type=password]:focus,
-.passkeeper-popup-box .passkeeper-new div input[type=password]:focus {
+.passkeeper-popup-box .passkeeper-new div input[type=password]:focus,
+.passkeeper-popup-box .passkeeper-settings div input[type=password]:focus {
   border-color: #b3b3b3;
   outline-color: #999999;
   outline-offset: 0;
 }
 .passkeeper-popup-box .passkeeper-login div a,
 .passkeeper-popup-box .passkeeper-query div a,
-.passkeeper-popup-box .passkeeper-new div a {
+.passkeeper-popup-box .passkeeper-new div a,
+.passkeeper-popup-box .passkeeper-settings div a {
   -webkit-border-radius: 2px;
   border-radius: 2px;
   width: 60px;
@@ -230,10 +237,12 @@ body {
 }
 .passkeeper-popup-box .passkeeper-login div a:hover,
 .passkeeper-popup-box .passkeeper-query div a:hover,
-.passkeeper-popup-box .passkeeper-new div a:hover {
+.passkeeper-popup-box .passkeeper-new div a:hover,
+.passkeeper-popup-box .passkeeper-settings div a:hover {
   background: #0079a1;
 }
 .passkeeper-popup-box .passkeeper-query,
-.passkeeper-popup-box .passkeeper-new {
+.passkeeper-popup-box .passkeeper-new,
+.passkeeper-popup-box .passkeeper-settings {
   display: none;
 }

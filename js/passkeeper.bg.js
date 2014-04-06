@@ -1,13 +1,6 @@
 (function() {
     var root = this;
-    var DEBUG = true;
     var PK_BUCKET = 'PK_BUCKET';
-
-    var logger = function(msg) {
-        if (DEBUG) {
-            console.log(msg);
-        }
-    };
 
     var Util = {
         now: function() {
@@ -31,6 +24,11 @@
 
     var DBDriver = {
         db: undefined,
+        token: null,
+
+        tokenGen: function() {
+            return Math.random.toString(16).substring(2);
+        },
 
         get: function(params) {
             var key = params.key;
@@ -65,6 +63,31 @@
             return db ? '[' + db.name + '--created at--' + db.created + ']' : '[No db existed]';
         },
 
+        login: function(params) {
+            var passwd = params.passwd;
+            var result = {};
+
+            result.passwd = (passwd === this.db.passwd);
+            result.token = this.token = this.tokenGen();
+
+            return result;
+        },
+
+        newPasswd: function(params) {
+            var newPaswd = params.newPasswd;
+            var token_ = params.token;
+
+            if (this.token == token_) {
+                this.db.passwd = newPasswd;
+                this.token = null;
+                console.log('new passwd saved: ');
+                console.log(this.db);
+                return true;
+            } else {
+                return false;
+            }
+        },
+
         init: function() {
             var this_ = this;
 
@@ -85,10 +108,10 @@
                     chrome.storage.sync.set({
                         PK_BUCKET: JSON.stringify(pkdb)
                     }, function() {
-                        logger('PK_BUCKET INIT: ' + pkdb.toString());
+                        console.log('PK_BUCKET INIT: ' + pkdb.toString());
                     });
                 } else {
-                    logger('DB existed');
+                    console.log('DB existed');
                 }
                 this_.db = pkdb;
             });

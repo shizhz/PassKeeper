@@ -1,8 +1,8 @@
 @theme: #ccc;
 @base_blue: #008cba;
-@popup_width: 410px;
+@popup_width: 510px;
 @popup_height: 250px;
-@menu_number: 3;
+@menu_number: 4;
 @menu_height: 40px;
 @msg_height: 30px;
 @input_height: 30px;
@@ -12,7 +12,7 @@
     width: @popup_width;
 }
 .menu_width {
-    width: (@popup_width / @menu_number) - 2;
+    width: (@popup_width / @menu_number) - 1;
 }
 .shadow {
     -webkit-box-shadow: 0 1px 2px 0 @theme;
@@ -177,7 +177,7 @@ body {
             }
         }
     }
-    .passkeeper-login, .passkeeper-query, .passkeeper-new {
+    .passkeeper-login, .passkeeper-query, .passkeeper-new, .passkeeper-settings {
         width: @popup_width;
         height: 50px;
         display: table;
@@ -212,7 +212,7 @@ body {
             }
         }
     }
-    .passkeeper-query, .passkeeper-new{
+    .passkeeper-query, .passkeeper-new, .passkeeper-settings {
         display: none;
     }
 }
