@@ -5,7 +5,8 @@
         'defaultTab': 'menu-login',
         'menu_id_login': 'menu-login',
         'menu_id_query': 'menu-query',
-        'menu_id_new': 'menu-new'
+        'menu_id_new': 'menu-new',
+        'menu_id_settings': 'menu-settings'
     };
 
     function getSiteKey() {
@@ -146,7 +147,8 @@
             menus: {
                 'menu-login': 'passkeeper-login',
                 'menu-query': 'passkeeper-query',
-                'menu-new': 'passkeeper-new'
+                'menu-new': 'passkeeper-new',
+                'menu-settings': 'passkeeper-settings'
             },
 
             current: settings.defaultTab,
@@ -214,7 +216,9 @@
 
             onSettings: function() {
                 $$('pk-btn-settings').on('click', (function(event) {
+                    console.log('settings cliecked');
                     var newPasswd = $.trim($$('pk-new-password').val());
+                    console.log('settings cliecked' + newpasswd);
 
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
