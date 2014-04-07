@@ -12,7 +12,12 @@
     function getSiteKey() {
         var url = location.href;
         var mark = url.indexOf('?');
-        return (mark == -1 ? url : url.substring(0, mark));
+        var result = (mark == -1 ? url : url.substring(0, mark));
+
+        mark = url.indexOf('#');
+        result = (mark == -1 ? result : result.substring(0, mark));
+
+        return result;
     }
 
     function NOP() {}
