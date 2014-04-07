@@ -115,9 +115,9 @@
                 });
             },
 
-            newPasswd: function (args, ohye, ohno) {
-                this.send('newPasswd', args, function (response) {
-                    (!!response.result ? ohye() : ohno());
+            newPasswd: function(args, ohye, ohno) {
+                this.send('newPasswd', args, function(response) {
+                    ( !! response.result ? ohye() : ohno());
                 });
             },
 
@@ -125,7 +125,7 @@
                 this.send('login', {
                     passwd: password
                 }, function(response) {
-                    ( !! response.result ? ohye(response.token) : ohno());
+                    ( !! response.result ? ohye(response) : ohno());
                 });
             },
 
@@ -146,6 +146,12 @@
                     }
                 });
             },
+
+            loadByKey: function(args, ohye, ohno) {
+                this.send('get', args, function(response) {
+                    ( !! response.result ? ohye(response) : ohno(response));
+                });
+            }
         };
 
         var PopupBox = {
@@ -203,7 +209,24 @@
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
                     }, true).validate(function() {
-                        // TODO: fill password
+                        DataSource.login($$('#pk-login-password').val(), function(res) {
+                            DataSource.loadByKey({
+                                key: getSiteKey(),
+                                token: res.token
+                            }, function(response) {
+                                var form = $('input:visible:password').closest('form');
+                                form.find(':password:visible').val(response.passwd)
+                                form.find('input[type=email]:visible, input[type=text]:visible').val(response.username);
+
+                                $(popupBox).fadeOut(500);
+                                form.submit();
+
+                            }, function (response) {
+                                Notifier.notify('OPERATION_FAILED');
+                            });
+                        }, function () {
+                            Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
+                        });
                     });
                 }).bind(this));
             },
@@ -230,11 +253,11 @@
                     }, function() {
                         Notifier.notify('PASSWORDS_NOT_MATCH');
                     }, true).validate(function() {
-                        DataSource.login($$('#pk-old-passwd').val(), function(token_) {
+                        DataSource.login($$('#pk-old-passwd').val(), function(response) {
 
                             DataSource.newPasswd({
                                 passwd: newPasswd,
-                                token: token_
+                                token: response.token
                             }, function() {
                                 Notifier.notify('OPERATION_DONE');
                             }, function() {
@@ -252,7 +275,7 @@
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
                     }, true).validate(function() {
-                        DataSource.login($$('#pk-password').val(), function(token_) {
+                        DataSource.login($$('#pk-password').val(), function(response) {
                             var site = $$('#pk-new-site').val();
                             var usernm = $$('#pk-site-username').val();
                             var passwd = $$('#pk-site-password').val();
@@ -262,7 +285,7 @@
                             form.find('input[type=email]:visible, input[type=text]:visible').addClass('selected-input');
 
                             DataSource.saveOrUpdate({
-                                token: token_,
+                                token: response.token,
                                 key: site,
                                 username: usernm,
                                 password: passwd

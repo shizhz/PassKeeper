@@ -38,7 +38,18 @@
 
         get: function(params) {
             var key = params.key;
-            return this.db.bucket[key] || '';
+            var token = params.token;
+            var result_ = {};
+
+            if(token == this.token) {
+                this.token = null;
+                result_ =  this.db.bucket[key] || {};
+                result_.result = true;
+            } else {
+                result_.result = false;
+            }
+
+            return result_;
         },
 
         size: function() {
@@ -68,6 +79,7 @@
             var token_ = params.token;
 
             if (this.token == token_) {
+                this.token = null;
                 var key = params.key;
                 var um = params.username;
                 var password = params.password;
