@@ -27,7 +27,7 @@
         token: null,
 
         tokenGen: function() {
-            return Math.random.toString(16).substring(2);
+            return this.token ? this.token : Math.random().toString(16).substring(2);
         },
 
         get: function(params) {
@@ -67,7 +67,7 @@
             var passwd = params.passwd;
             var result = {};
 
-            result.passwd = (passwd === this.db.passwd);
+            result.result = this.db.passwd ? (passwd === this.db.passwd) : (passwd === 'foobar');
             result.token = this.token = this.tokenGen();
 
             return result;
@@ -80,8 +80,6 @@
             if (this.token == token_) {
                 this.db.passwd = newPasswd;
                 this.token = null;
-                console.log('new passwd saved: ');
-                console.log(this.db);
                 return true;
             } else {
                 return false;
@@ -122,15 +120,18 @@
             try {
                 var action = request.action;
                 var params = request.params;
-                var result = null;
 
                 if (this[action]) {
-                    result = this[action].call(this, params);
+                    var result = this[action].call(this, params);
+                    if ((typeof result) === 'object') {
+                        response = Object.create(result);
+                    } else {
+                        response.result = result;
+                    }
                 } else {
                     throw new DBError("No method '" + action + "' definition found in DBDriver");
                 }
 
-                response.result = result;
 
             } catch (e) {
                 response.error = e.message;

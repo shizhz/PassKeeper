@@ -106,6 +106,8 @@
                     action: action_,
                     params: params_
                 }, function(response) {
+                    console.log(action_ + ' in send');
+                    console.log(response);
                     callback(response);
                 });
             },
@@ -116,9 +118,9 @@
                 });
             },
 
-            login: function(passwd, ohye, ohno) {
+            login: function(password, ohye, ohno) {
                 this.send('login', {
-                    'passwd': passed
+                    passwd: password
                 }, function(response) {
                     ( !! response.result ? ohye(response.token) : ohno());
                 });
@@ -215,20 +217,18 @@
             },
 
             onSettings: function() {
-                $$('pk-btn-settings').on('click', (function(event) {
-                    console.log('settings cliecked');
-                    var newPasswd = $.trim($$('pk-new-password').val());
-                    console.log('settings cliecked' + newpasswd);
+                $$('#pk-btn-settings').on('click', (function(event) {
+                    var newPasswd = $.trim($$('#pk-new-password').val());
 
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
                     }, true).add(function() {
-                        return newPasswd == $.trim($$('pk-new-password-again'));
+                        return newPasswd == $.trim($$('#pk-new-password-again').val());
                     }, function() {
                         Notifier.notify('PASSWORDS_NOT_MATCH');
                     }, true).validate(function() {
-                        DataSource.login(newPasswd, function(token_) {
-                            var newPasswd = $('pk-new-password').val();
+                        DataSource.login($$('#pk-old-passwd').val(), function(token_) {
+                            console.log('token got: ' + token_)
 
                             DataSource.newPasswd({
                                 passwd: newPasswd,
