@@ -254,7 +254,7 @@
 
                             var form = $('input:visible:password').closest('form');
                             form.find(':password:visible').addClass('selected-input');
-                            form.find('input[type=text]:visible').addClass('selected-input');
+                            form.find('input[type=email]:visible, input[type=text]:visible').addClass('selected-input');
 
                             DataSource.saveOrUpdate({
                                 token: token_,
