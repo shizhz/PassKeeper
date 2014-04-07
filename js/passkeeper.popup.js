@@ -106,8 +106,6 @@
                     action: action_,
                     params: params_
                 }, function(response) {
-                    console.log(action_ + ' in send');
-                    console.log(response);
                     callback(response);
                 });
             },
@@ -228,7 +226,6 @@
                         Notifier.notify('PASSWORDS_NOT_MATCH');
                     }, true).validate(function() {
                         DataSource.login($$('#pk-old-passwd').val(), function(token_) {
-                            console.log('token got: ' + token_)
 
                             DataSource.newPasswd({
                                 passwd: newPasswd,

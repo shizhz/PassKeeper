@@ -6,6 +6,12 @@
         now: function() {
             var date = new Date();
             return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        },
+
+        copyProperties: function(sourceObj, targetObj) {
+            Object.keys(sourceObj).forEach(function(key) {
+                targetObj[key] = sourceObj[key];
+            });
         }
     };
 
@@ -48,7 +54,16 @@
             return this.keys().indexOf(key) >= 0;
         },
 
-        save: function(params) {
+        sync: function() {
+            console.log(this.db);
+            chrome.storage.sync.set({
+                PK_BUCKET: JSON.stringify(this.db)
+            }, (function() {
+                console.log('PK_BUCKET UPDATED');
+            }).bind(this));
+        },
+
+        saveOrUpdate: function(params) {
             var key = params.key;
             var record = params.record;
             var pre = this.get(key);
@@ -65,21 +80,25 @@
 
         login: function(params) {
             var passwd = params.passwd;
-            var result = {};
+            var result_ = {};
 
-            result.result = this.db.passwd ? (passwd === this.db.passwd) : (passwd === 'foobar');
-            result.token = this.token = this.tokenGen();
+            result_.result = this.db.passwd ? (passwd === this.db.passwd) : (passwd === 'foobar');
 
-            return result;
+            if (result_.result) {
+                result_.token = this.token = this.tokenGen();
+            }
+
+            return result_;
         },
 
         newPasswd: function(params) {
-            var newPaswd = params.newPasswd;
+            var newPassword = params.passwd;
             var token_ = params.token;
 
             if (this.token == token_) {
-                this.db.passwd = newPasswd;
+                this.db.passwd = newPassword;
                 this.token = null;
+                this.sync();
                 return true;
             } else {
                 return false;
@@ -124,15 +143,13 @@
                 if (this[action]) {
                     var result = this[action].call(this, params);
                     if ((typeof result) === 'object') {
-                        response = Object.create(result);
+                        Util.copyProperties(result, response);
                     } else {
                         response.result = result;
                     }
                 } else {
                     throw new DBError("No method '" + action + "' definition found in DBDriver");
                 }
-
-
             } catch (e) {
                 response.error = e.message;
             }
