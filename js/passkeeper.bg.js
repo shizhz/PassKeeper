@@ -59,18 +59,30 @@
             chrome.storage.sync.set({
                 PK_BUCKET: JSON.stringify(this.db)
             }, (function() {
+                console.log(this.db);
                 console.log('PK_BUCKET UPDATED');
             }).bind(this));
         },
 
         saveOrUpdate: function(params) {
-            var key = params.key;
-            var record = params.record;
-            var pre = this.get(key);
+            var token_ = params.token;
 
-            this.db.bucket[key] = record;
+            if (this.token == token_) {
+                var key = params.key;
+                var um = params.username;
+                var password = params.password;
+                var record = {
+                    username: um,
+                    passwd: password
+                };
 
-            return pre;
+                this.db.bucket[key] = record;
+                this.sync();
+
+                return true;
+            } else {
+                return false;
+            }
         },
 
         info: function() {
