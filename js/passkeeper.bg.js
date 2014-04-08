@@ -36,14 +36,38 @@
             return this.token ? this.token : Math.random().toString(16).substring(2);
         },
 
+        query: function(params) {
+            var key_ = params.key;
+            var token = params.token;
+            var result_ = {};
+            var entries = {};
+
+            if (token == this.token) {
+                Object.keys(this.db.bucket).filter(function(key) {
+                    return key.indexOf(key_) > -1;
+                }).forEach((function(wantedKey) {
+                    entries[wantedKey] = this.db.bucket[wantedKey];
+                }).bind(this));
+
+                result_.result = true;
+            } else {
+                 result_.result = false;
+            }
+            result_.entries = entries;
+
+            console.log(result_);
+
+            return result_;
+        },
+
         get: function(params) {
             var key = params.key;
             var token = params.token;
             var result_ = {};
 
-            if(token == this.token) {
+            if (token == this.token) {
                 this.token = null;
-                result_ =  this.db.bucket[key] || {};
+                result_ = this.db.bucket[key] || {};
                 result_.result = true;
             } else {
                 result_.result = false;
@@ -96,7 +120,7 @@
             }
         },
 
-        remove: function (params) {
+        remove: function(params) {
             var key = params.key;
             var token_ = params.token;
 
@@ -107,7 +131,7 @@
 
                 return true;
             } else {
-                 return false;
+                return false;
             }
         },
 

@@ -154,9 +154,15 @@
                 });
             },
 
-            removeByKey: function (args, ohye, ohno) {
-                this.send('remove', args, function (response) {
-                    (!! response.result ? ohye(response) : ohno());
+            queryByKey: function(args, ohye, ohno) {
+                this.send('query', args, function(response) {
+                    ( !! response.result ? ohye(response) : ohno(response));
+                });
+            },
+
+            removeByKey: function(args, ohye, ohno) {
+                this.send('remove', args, function(response) {
+                    ( !! response.result ? ohye(response) : ohno());
                 });
             }
         };
@@ -239,26 +245,35 @@
             },
 
             onQuery: function() {
-                $$('#pk-btn-query').on('click', (function(event) {
-                    Validator.add(this.emptyCheck, function() {
+                var this_ = this;
+                $$('#pk-btn-query').on('click', function(event) {
+                    var btnQuery = $(this);
+                    Validator.add(this_.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
-                    }, true).validate((function() {
+                    }, true).validate(function() {
                         DataSource.login($$('#pk-query-password').val(), function(res) {
-                            DataSource.loadByKey({
+                            DataSource.queryByKey({
                                 key: $$('#pk-domainname').val(),
                                 token: res.token
                             }, function(response) {
-                                console.log('in query');
-                                console.log(response);
-                                $$('#pk-domainname').val(response.username + "/" + response.passwd);
+                                var entries = response.entries || {};
+
+                                var innerHTML = Object.keys(entries).map(function(key) {
+                                    var value = entries[key] || {};
+                                    return key + " | " + ( !! value.username ? value.username : "-") +
+                                        "/" + ( !! value.passwd ? value.passwd : "-");
+                                }).join('<br>');
+
+                                var span = $('<span style="color: white !important;">').append(innerHTML);
+                                $(btnQuery).parent().append(span);
                             }, function(response) {
                                 Notifier.notify('OPERATION_FAILED');
                             });
                         }, function() {
                             Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
                         });
-                    }).bind(this));
-                }).bind(this));
+                    });
+                });
             },
 
             onSettings: function() {
@@ -323,27 +338,27 @@
                 }).bind(this));
             },
 
-            onRemove: function () {
-                $$('#pk-btn-remove').on('click', (function (event) {
+            onRemove: function() {
+                $$('#pk-btn-remove').on('click', (function(event) {
                     var pkPasswd = $.trim($$('#pk-password').val());
-                    Validator.add( function () {
+                    Validator.add(function() {
                         return !!pkPasswd;
-                    }, function () {
+                    }, function() {
                         Notifier.notify('PASSKEEPER_PASSWORD_EMPTY');
-                    }, true ).validate( function () {
-                        DataSource.login(pkPasswd, function (res) {
+                    }, true).validate(function() {
+                        DataSource.login(pkPasswd, function(res) {
                             DataSource.removeByKey({
                                 token: res.token,
                                 key: $$('#pk-new-site').val()
-                            }, function () {
+                            }, function() {
                                 Notifier.notify('OPERATION_DONE');
-                            }, function () {
+                            }, function() {
                                 Notifier.notify('OPERATION_FAILED');
                             });
-                        }, function () {
+                        }, function() {
                             Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
                         });
-                    } );
+                    });
                 }).bind(this));
             },
 
@@ -494,6 +509,8 @@ $(function() {
         '              <input type="text" id="pk-domainname" name="pk-domainname" value="" placeholder="Domain Name"> ' +
         '              <input id="pk-query-password" type="password" name="pk-query-password" placeholder="Password for Passkeeper"> ' +
         '              <a id="pk-btn-query" href="#">Go</a> ' +
+        '          </div> ' +
+        '          <div id="pk-query-results"> ' +
         '          </div> ' +
         '      </div> ' +
         '      <div id="passkeeper-new" class="passkeeper-new"> ' +
