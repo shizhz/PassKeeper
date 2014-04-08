@@ -55,8 +55,6 @@
             }
             result_.entries = entries;
 
-            console.log(result_);
-
             return result_;
         },
 
@@ -172,7 +170,6 @@
 
             chrome.storage.sync.get(PK_BUCKET, function(result) {
                 var pkdb = result[PK_BUCKET];
-                console.log(pkdb);
                 try {
                     pkdb = JSON.parse(pkdb);
                 } catch (e) {
