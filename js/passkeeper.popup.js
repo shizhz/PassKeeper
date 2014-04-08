@@ -10,14 +10,9 @@
     };
 
     function getSiteKey() {
-        var url = location.href;
-        var mark = url.indexOf('?');
-        var result = (mark == -1 ? url : url.substring(0, mark));
-
-        mark = url.indexOf('#');
-        result = (mark == -1 ? result : result.substring(0, mark));
-
-        return result;
+        var hostname = location.hostname;
+        var mark = hostname.indexOf('.');
+        return hostname.substring(mark + 1);
     }
 
     function NOP() {}
