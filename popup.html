@@ -4,33 +4,11 @@
 <head>
     <title>PassKeeper</title>
 
-    <link rel="stylesheet" href="popup.css" type="text/css" />
+    <link rel="stylesheet" href="css/popup.css" type="text/css" />
 </head>
 
 <body>
     <div id="passkeeper-box" class="passkeeper-popup-box" tabindex="1">
-        <nav>
-            <ul>
-                <li>
-                    <a href="javascript:void(0);" id="menu-login" class="menu-tab">Login</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" id="menu-query" class="menu-tab">Query</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" id="menu-new" class="menu-tab">New || Update</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0);" id="menu-new" class="menu-tab">Settings</a>
-                </li>
-            </ul>
-        </nav>
-        <div id="passkeeper-login" class="passkeeper-login">
-            <div>
-                <input type="password" name="pk-login-password" id="pk-login-password" value="" placeholder="Password for Passkeeper" />
-                <a href="#" id="pk-btn-login">Go</a>
-            </div>
-        </div>
         <div id="passkeeper-query" class="passkeeper-query">
             <div>
                 <input type="text" name="pk-domainname" value="" placeholder="Domain Name">
@@ -54,10 +32,6 @@
                 <input type="password" name="pk-new-password-again" id="pk-new-password-again" value="" placeholder="New Password Again" />
                 <a href="#" id="pk-btn-setting">Go</a>
             </div>
-        </div>
-        <div id="pk-message-box" class="passkeeper-message">
-            <span id="pk-message"> Wrong password</span>
-            <a href="#" class="btn-close">x</a>
         </div>
     </div>
 </body>
