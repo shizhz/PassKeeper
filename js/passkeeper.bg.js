@@ -52,6 +52,7 @@
             return result_;
         },
 
+
         size: function() {
             return this.keys().length;
         },
@@ -66,11 +67,9 @@
         },
 
         sync: function() {
-            console.log(this.db);
             chrome.storage.sync.set({
                 PK_BUCKET: JSON.stringify(this.db)
             }, (function() {
-                console.log(this.db);
                 console.log('PK_BUCKET UPDATED');
             }).bind(this));
         },
@@ -94,6 +93,21 @@
                 return true;
             } else {
                 return false;
+            }
+        },
+
+        remove: function (params) {
+            var key = params.key;
+            var token_ = params.token;
+
+            if (this.token == token_) {
+                this.token = null;
+                delete this.db.bucket[key];
+                this.sync();
+
+                return true;
+            } else {
+                 return false;
             }
         },
 

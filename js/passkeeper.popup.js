@@ -38,7 +38,8 @@
                 OPERATION_FAILED: 'Operation Failed',
                 USERNAME_PASSWORD_MISMATCH: 'Username/Password NOT Match',
                 NO_RECORD_FOUND: 'No Matching Result Found',
-                PASSWORDS_NOT_MATCH: 'New Passwords Does Not Match'
+                PASSWORDS_NOT_MATCH: 'New Passwords Does Not Match',
+                PASSKEEPER_PASSWORD_EMPTY: 'Password is Empty for Passkeeper'
             },
 
             notify: function(msgKey) {
@@ -151,6 +152,12 @@
                 this.send('get', args, function(response) {
                     ( !! response.result ? ohye(response) : ohno(response));
                 });
+            },
+
+            removeByKey: function (args, ohye, ohno) {
+                this.send('remove', args, function (response) {
+                    (!! response.result ? ohye(response) : ohno());
+                });
             }
         };
 
@@ -237,7 +244,16 @@
                         Notifier.notify('EMPTY_INPUT');
                     }, true).validate((function() {
                         DataSource.login($$('#pk-query-password').val(), function(res) {
-                            //TODO: login success
+                            DataSource.loadByKey({
+                                key: $$('#pk-domainname').val(),
+                                token: res.token
+                            }, function(response) {
+                                console.log('in query');
+                                console.log(response);
+                                $$('#pk-domainname').val(response.username + "/" + response.passwd);
+                            }, function(response) {
+                                Notifier.notify('OPERATION_FAILED');
+                            });
                         }, function() {
                             Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
                         });
@@ -307,6 +323,30 @@
                 }).bind(this));
             },
 
+            onRemove: function () {
+                $$('#pk-btn-remove').on('click', (function (event) {
+                    var pkPasswd = $.trim($$('#pk-password').val());
+                    Validator.add( function () {
+                        return !!pkPasswd;
+                    }, function () {
+                        Notifier.notify('PASSKEEPER_PASSWORD_EMPTY');
+                    }, true ).validate( function () {
+                        DataSource.login(pkPasswd, function (res) {
+                            DataSource.removeByKey({
+                                token: res.token,
+                                key: $$('#pk-new-site').val()
+                            }, function () {
+                                Notifier.notify('OPERATION_DONE');
+                            }, function () {
+                                Notifier.notify('OPERATION_FAILED');
+                            });
+                        }, function () {
+                            Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
+                        });
+                    } );
+                }).bind(this));
+            },
+
             onMessageClose: function() {
                 var msgBox = $$('#pk-message-box');
                 $('a', msgBox).on('click', function(event) {
@@ -317,7 +357,7 @@
             onEnter: function() {
                 $$('input:not([readonly])').keypress(function(event) {
                     if (event.which == 13) {
-                        $$('a[id^=pk-btn]:visible').trigger('click');
+                        $$('a[id^=pk-btn]:visible').last().trigger('click');
                     }
                 });
             },
@@ -334,6 +374,7 @@
                 this.onLogin();
                 this.onQuery();
                 this.onNew();
+                this.onRemove();
                 this.onSettings();
                 this.onMessageClose();
                 this.onEnter();
@@ -384,6 +425,7 @@
                 '72': false, // h
                 '76': false, // l
                 '67': false, // c
+                '90': false, // z
                 '13': false, // center
             },
 
@@ -391,8 +433,8 @@
                 if (this.keys['17'] && this.keys['73']) {
                     // Ctrl - i
                     PopupBox.rotateTab();
-                } else if (this.keys['17'] && this.keys['67']) {
-                    // Ctrl - c
+                } else if (this.keys['17'] && this.keys['90']) {
+                    // Ctrl - z
                     PopupBox.hide();
                 }
             },
@@ -449,18 +491,19 @@ $(function() {
         '      </div> ' +
         '      <div id="passkeeper-query" class="passkeeper-query"> ' +
         '          <div> ' +
-        '              <input type="text" name="pk-domainname" value="" placeholder="Domain Name"> ' +
+        '              <input type="text" id="pk-domainname" name="pk-domainname" value="" placeholder="Domain Name"> ' +
         '              <input id="pk-query-password" type="password" name="pk-query-password" placeholder="Password for Passkeeper"> ' +
         '              <a id="pk-btn-query" href="#">Go</a> ' +
         '          </div> ' +
         '      </div> ' +
         '      <div id="passkeeper-new" class="passkeeper-new"> ' +
         '          <div> ' +
-        '              <input type="text" readonly name="pk-new-site" id="pk-new-site" value="" /> ' +
-        '              <input type="text" name="pk-site-username" id="pk-site-username" value="" placeholder="Username" /> ' +
-        '              <input type="password" name="pk-site-password" id="pk-site-password" value="" placeholder="Password for This Site" /> ' +
-        '              <input type="password" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
-        '              <a href="#" id="pk-btn-new">Go</a> ' +
+        '              <input type="text" tabindex="1" name="pk-new-site" id="pk-new-site" value="" /> ' +
+        '              <input type="text" tabindex="2" name="pk-site-username" id="pk-site-username" value="" placeholder="Username" /> ' +
+        '              <input type="password" tabindex="3" name="pk-site-password" id="pk-site-password" value="" placeholder="Password for This Site" /> ' +
+        '              <a href="#" id="pk-btn-remove" tabindex="5">Remove</a> ' +
+        '              <input type="password" tabindex="4" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
+        '              <a href="#" id="pk-btn-new" tabindex="6">Go</a> ' +
         '          </div> ' +
         '      </div> ' +
         '    <div id="passkeeper-settings" class="passkeeper-settings"> ' +

@@ -19,7 +19,7 @@
 
     "browser_action": {
         "default_icon": "icons/passkeeper-22.png",
-        "default_popup": "passKeeper.html"
+        "default_popup": "popup.html"
     },
 
     "background": {
