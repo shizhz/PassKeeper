@@ -11,8 +11,11 @@
 
     function getSiteKey() {
         var hostname = location.hostname;
-        var mark = hostname.indexOf('.');
-        return hostname.substring(mark + 1);
+        var parts = hostname.split('.').filter( function (item, index, arr) {
+            // last two items
+            return index + 2 >= arr.length;
+        } );
+        return parts.join('.');
     }
 
     function NOP() {}
