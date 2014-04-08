@@ -202,6 +202,7 @@
 
                         this_.focusFirst();
                         this_.clear();
+                        this_.clearQuery();
                         this_.current = menuTabId;
                         event.preventDefault();
                     });
@@ -244,6 +245,10 @@
                 }).bind(this));
             },
 
+            clearQuery: function() {
+                $('#pk-btn-query').parent().find('span').remove();
+            },
+
             onQuery: function() {
                 var this_ = this;
                 $$('#pk-btn-query').on('click', function(event) {
@@ -265,6 +270,7 @@
                                 }).join('<br>');
 
                                 var span = $('<span style="color: white !important;">').append(innerHTML);
+                                $(btnQuery).parent().find('span').remove();
                                 $(btnQuery).parent().append(span);
                             }, function(response) {
                                 Notifier.notify('OPERATION_FAILED');
