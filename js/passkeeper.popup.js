@@ -221,10 +221,10 @@
                                 $(popupBox).fadeOut(500);
                                 form.submit();
 
-                            }, function (response) {
+                            }, function(response) {
                                 Notifier.notify('OPERATION_FAILED');
                             });
-                        }, function () {
+                        }, function() {
                             Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
                         });
                     });
@@ -233,12 +233,15 @@
 
             onQuery: function() {
                 $$('#pk-btn-query').on('click', (function(event) {
-                    console.log('query btn clicked');
                     Validator.add(this.emptyCheck, function() {
                         Notifier.notify('EMPTY_INPUT');
-                    }, true).validate(function() {
-                        // TODO: query process
-                    });
+                    }, true).validate((function() {
+                        DataSource.login($$('#pk-query-password').val(), function(res) {
+                            //TODO: login success
+                        }, function() {
+                            Notifier.notify('PASSKEEPER_PASSWORD_WRONG');
+                        });
+                    }).bind(this));
                 }).bind(this));
             },
 
