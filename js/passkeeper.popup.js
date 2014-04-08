@@ -203,6 +203,8 @@
                         this_.focusFirst();
                         this_.clear();
                         this_.clearQuery();
+                        $$('#pk-new-site').val(getSiteKey());
+                        $$('#pk-message-box').toggle(false);
                         this_.current = menuTabId;
                         event.preventDefault();
                     });
@@ -386,8 +388,6 @@
             flushUI: function() {
                 $$('#' + this.current).removeClass('activeffect').addClass('activeffect');
                 $$('#' + this.current).trigger('click');
-                $$('#pk-new-site').val(getSiteKey());
-                $$('#pk-message-box').toggle(false);
             },
 
             registEvents: function() {
