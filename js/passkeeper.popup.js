@@ -531,7 +531,7 @@ $(function() {
         '              <div class="passkeeper-new-buttons"> ' +
         '                  <a href="#" id="pk-btn-new" tabindex="8">Go</a> ' +
         '                  <a href="#" id="pk-btn-remove" tabindex="9">Remove</a> ' +
-        '              </div> ' + 
+        '              </div> ' +
         '          </div> ' +
         '      </div> ' +
         '    <div id="passkeeper-settings" class="passkeeper-settings"> ' +
