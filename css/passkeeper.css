@@ -241,6 +241,18 @@ body {
 .passkeeper-popup-box .passkeeper-settings div a:hover {
   background: #0079a1;
 }
+.passkeeper-popup-box .passkeeper-new input {
+  float: left;
+  width: 170px !important;
+}
+.passkeeper-popup-box .passkeeper-new input:after {
+  clear: both;
+}
+.passkeeper-popup-box .passkeeper-new div.passkeeper-new-buttons {
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
+}
 .passkeeper-popup-box .passkeeper-query,
 .passkeeper-popup-box .passkeeper-new,
 .passkeeper-popup-box .passkeeper-settings {

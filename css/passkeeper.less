@@ -212,6 +212,22 @@ body {
             }
         }
     }
+
+    .passkeeper-new {
+        input {
+            float:left;
+            width: @popup_width * (2 / 6) !important;
+            &:after {
+                clear: both;
+            }
+        }
+        div.passkeeper-new-buttons {
+             float: left;
+             margin-top: 10px;
+             margin-left: 10px;
+        }
+    }
+
     .passkeeper-query, .passkeeper-new, .passkeeper-settings {
         display: none;
     }
