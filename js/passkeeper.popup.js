@@ -522,15 +522,15 @@ $(function() {
         '      <div id="passkeeper-new" class="passkeeper-new"> ' +
         '          <div> ' +
         '              <input type="text" tabindex="1" name="pk-new-site" id="pk-new-site" value="" /> ' +
-        '              <input type="text" tabindex="2" name="pk-site-xpath-clickbtn" id="pk-site-xpath-clickbtn" placeholder="Xpath for Login Btn" value="" /> ' +
+        '              <input type="text" tabindex="2" name="pk-site-selector-clickbtn" id="pk-site-selector-clickbtn" placeholder="selector for Login Btn" value="" /> ' +
         '              <input type="text" tabindex="3" name="pk-site-username" id="pk-site-username" value="" placeholder="Username" /> ' +
-        '              <input type="text" tabindex="4" name="pk-site-xpath-username" id="pk-site-xpath-username" value="" placeholder="Username Xpath" /> ' +
+        '              <input type="text" tabindex="4" name="pk-site-selector-username" id="pk-site-selector-username" value="" placeholder="Username selector" /> ' +
         '              <input type="password" tabindex="5" name="pk-site-password" id="pk-site-password" value="" placeholder="Password for This Site" /> ' +
-        '              <input type="password" tabindex="6" name="pk-site-xpath-password" id="pk-site-xpath-password" value="" placeholder="Password Xpath" /> ' +
-        '              <input type="password" tabindex="4" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
+        '              <input type="password" tabindex="6" name="pk-site-selector-password" id="pk-site-selector-password" value="" placeholder="Password selector" /> ' +
+        '              <input type="password" tabindex="7" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
         '              <div class="passkeeper-new-buttons"> ' +
-        '                  <a href="#" id="pk-btn-remove" tabindex="5">Remove</a> ' +
-        '                  <a href="#" id="pk-btn-new" tabindex="6">Go</a> ' +
+        '                  <a href="#" id="pk-btn-new" tabindex="8">Go</a> ' +
+        '                  <a href="#" id="pk-btn-remove" tabindex="9">Remove</a> ' +
         '              </div> ' + 
         '          </div> ' +
         '      </div> ' +
