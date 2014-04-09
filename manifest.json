@@ -22,7 +22,9 @@
     },
 
     "background": {
-        "scripts": ["js/passkeeper.bg.js"]
+        "scripts": ["js/passkeeper.bg.js"],
+        "persistent": false
+
     },
 
     "content_scripts": [{

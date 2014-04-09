@@ -11,10 +11,10 @@
 
     function getSiteKey() {
         var hostname = location.hostname;
-        var parts = hostname.split('.').filter( function (item, index, arr) {
+        var parts = hostname.split('.').filter(function(item, index, arr) {
             // last two items
             return index + 2 >= arr.length;
-        } );
+        });
         return parts.join('.');
     }
 
@@ -132,6 +132,8 @@
                 this.send('contains', {
                     key: k
                 }, function(response) {
+                    console.log(k);
+                    console.log(response);
                     callback( !! response.result);
                 });
             },
@@ -191,6 +193,10 @@
 
                 $.each(menus, function(key, value) {
                     $$('#' + key).on('click', function(event) {
+                        var form = $('input:visible:password').closest('form');
+                        form.find(':password:visible').addClass('selected-input');
+                        form.find('input[type=email]:visible, input[type=text]:visible').addClass('selected-input');
+
                         var menuTabId = $(this).attr('id');
 
                         $.each(menus, function(k, v) {
@@ -228,15 +234,19 @@
                                 key: getSiteKey(),
                                 token: res.token
                             }, function(response) {
-                                console.log('goes here');
-                                var passwdInput = $('input:visible:password');
-                                var form = passwdInput.closest('form');
+                                var selectorLogin = response.selectorLogin;
+                                var selectorUsername = response.selectorUsername || '';
+                                var selectorPassword = response.selectorPassword || '';
 
-                                form.find('input[type=email]:visible, input[type=text]:visible').val(response.username);
-                                passwdInput.val(response.passwd)
+                                var passwdInput = selectorPassword ? $(selectorPassword) : $('input:visible:password');
+                                var form = passwdInput.closest('form');
+                                var usernameInput = selectorUsername ? $(selectorUsername) : form.find('input[type=email]:visible, input[type=text]:visible');
+
+                                usernameInput.val(response.username);
+                                passwdInput.val(response.passwd);
 
                                 $(popupBox).fadeOut(300);
-
+                                (selectorLogin ? $(selectorLogin).trigger('click') : form.submit());
                             }, function(response) {
                                 Notifier.notify('OPERATION_FAILED');
                             });
@@ -314,23 +324,30 @@
 
             onNew: function() {
                 $$('#pk-btn-new').on('click', (function(event) {
-                    Validator.add(this.emptyCheck, function() {
+
+                    Validator.add(function() {
+                        return 'input#pk-new-site, input#pk-site-selector-clickbtn, input#pk-site-username, input#pk-site-password, input#pk-site-password, input#pk-password'.split(',').every(function(selector) {
+                            return !!$.trim($$(selector).val());
+                        });
+                    }, function() {
                         Notifier.notify('EMPTY_INPUT');
                     }, true).validate(function() {
                         DataSource.login($$('#pk-password').val(), function(response) {
                             var site = $$('#pk-new-site').val();
                             var usernm = $$('#pk-site-username').val();
                             var passwd = $$('#pk-site-password').val();
-
-                            var form = $('input:visible:password').closest('form');
-                            form.find(':password:visible').addClass('selected-input');
-                            form.find('input[type=email]:visible, input[type=text]:visible').addClass('selected-input');
+                            var selectorLoginBtn = $$('#pk-site-selector-clickbtn').val();
+                            var selectorLoginUsername = $$('#pk-site-selector-username').val();
+                            var selectorLoginPasswd = $$('#pk-site-selector-password').val();
 
                             DataSource.saveOrUpdate({
                                 token: response.token,
                                 key: site,
                                 username: usernm,
-                                password: passwd
+                                password: passwd,
+                                selectorLogin: selectorLoginBtn,
+                                selectorUsername: selectorLoginUsername,
+                                selectorPassword: selectorLoginPasswd
                             }, function() {
                                 Notifier.notify('OPERATION_DONE');
                                 setTimeout(function() {

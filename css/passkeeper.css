@@ -82,7 +82,7 @@ body {
 .passkeeper-popup-box {
   display: none;
   width: 511px;
-  height: 250px;
+  height: 270px;
   border-top: none;
   background-color: white;
   position: absolute;
@@ -243,7 +243,7 @@ body {
 }
 .passkeeper-popup-box .passkeeper-new input {
   float: left;
-  width: 255px !important;
+  width: 204px !important;
 }
 .passkeeper-popup-box .passkeeper-new input:after {
   clear: both;

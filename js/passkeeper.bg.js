@@ -51,7 +51,7 @@
 
                 result_.result = true;
             } else {
-                 result_.result = false;
+                result_.result = false;
             }
             result_.entries = entries;
 
@@ -93,6 +93,7 @@
                 PK_BUCKET: JSON.stringify(this.db)
             }, (function() {
                 console.log('PK_BUCKET UPDATED');
+                console.log(this.db);
             }).bind(this));
         },
 
@@ -106,7 +107,10 @@
                 var password = params.password;
                 var record = {
                     username: um,
-                    passwd: password
+                    passwd: password,
+                    selectorLogin: params.selectorLogin,
+                    selectorUsername: params.selectorUsername,
+                    selectorPassword: params.selectorPassword
                 };
 
                 this.db.bucket[key] = record;
@@ -165,7 +169,7 @@
             }
         },
 
-        init: function() {
+        init: function(callback) {
             var this_ = this;
 
             chrome.storage.sync.get(PK_BUCKET, function(result) {
@@ -190,6 +194,7 @@
                     console.log('DB existed');
                 }
                 this_.db = pkdb;
+                callback();
             });
         },
 
@@ -218,10 +223,14 @@
     };
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        var res = DBDriver.dispatch(request);
-        sendResponse(res);
+        if (!DBDriver.db) {
+            DBDriver.init(function() {
+                //TODO: WHY THIS RESPONSE IS NOT WORKING...
+                sendResponse(DBDriver.dispatch(request));
+            });
+        } else {
+            sendResponse(DBDriver.dispatch(request));
+        }
     });
-
-    DBDriver.init();
 
 }).call(this);
