@@ -10,12 +10,7 @@
     };
 
     function getSiteKey() {
-        var hostname = location.hostname;
-        var parts = hostname.split('.').filter(function(item, index, arr) {
-            // last two items
-            return index + 2 >= arr.length;
-        });
-        return parts.join('.');
+        return hostname.split('.').slice(-2).join('.');
     }
 
     function NOP() {}
