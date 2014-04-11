@@ -37,14 +37,12 @@
         },
 
         query: function(params) {
-            var key_ = params.key;
-            var token = params.token;
             var result_ = {};
             var entries = {};
 
-            if (token == this.token) {
+            if (params.token == this.token) {
                 Object.keys(this.db.bucket).filter(function(key) {
-                    return key.indexOf(key_) > -1;
+                    return key.indexOf(params.key) > -1;
                 }).forEach((function(wantedKey) {
                     entries[wantedKey] = this.db.bucket[wantedKey];
                 }).bind(this));
@@ -59,13 +57,11 @@
         },
 
         get: function(params) {
-            var key = params.key;
-            var token = params.token;
             var result_ = {};
 
-            if (token == this.token) {
+            if (params.token == this.token) {
                 this.token = null;
-                result_ = this.db.bucket[key] || {};
+                result_ = this.db.bucket[params.key] || {};
                 result_.result = true;
             } else {
                 result_.result = false;
@@ -84,8 +80,7 @@
         },
 
         contains: function(params) {
-            var key = params.key;
-            return this.keys().indexOf(key) >= 0;
+            return this.keys().indexOf(params.key) >= 0;
         },
 
         sync: function() {
@@ -97,12 +92,11 @@
         },
 
         saveOrUpdate: function(params) {
-            var token_ = params.token;
             var merge = function(newer, older) {
                 return !!newer ? (newer == '_clear_' ? "" : newer) : older;
             };
 
-            if (this.token == token_) {
+            if (this.token == params.token) {
                 this.token = null;
                 var key = params.key;
                 var oldRecord = this.db.bucket[key] || {};
@@ -124,12 +118,9 @@
         },
 
         remove: function(params) {
-            var key = params.key;
-            var token_ = params.token;
-
-            if (this.token == token_) {
+            if (this.token == params.token) {
                 this.token = null;
-                delete this.db.bucket[key];
+                delete this.db.bucket[params.key];
                 this.sync();
 
                 return true;
@@ -157,11 +148,8 @@
         },
 
         newPasswd: function(params) {
-            var newPassword = params.passwd;
-            var token_ = params.token;
-
-            if (this.token == token_) {
-                this.db.passwd = newPassword;
+            if (this.token == params.token) {
+                this.db.passwd = params.passwd;
                 this.token = null;
                 this.sync();
                 return true;
