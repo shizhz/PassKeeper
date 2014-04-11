@@ -1,4 +1,6 @@
 (function() {
+    'use strict';
+
     var root = this;
     var PK_BUCKET = 'PK_BUCKET';
 
