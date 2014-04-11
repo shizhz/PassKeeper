@@ -127,8 +127,6 @@
                 this.send('contains', {
                     key: k
                 }, function(response) {
-                    console.log(k);
-                    console.log(response);
                     callback( !! response.result);
                 });
             },
@@ -321,12 +319,20 @@
                 $$('#pk-btn-new').on('click', (function(event) {
 
                     Validator.add(function() {
-                        return 'input#pk-new-site, input#pk-site-selector-clickbtn, input#pk-site-username, input#pk-site-password, input#pk-site-password, input#pk-password'.split(',').every(function(selector) {
-                            return !!$.trim($$(selector).val());
-                        });
+                        return !(['input#pk-site-selector-clickbtn',
+                            'input#pk-site-username',
+                            'input#pk-site-selector-username',
+                            'input#pk-site-password',
+                            'input#pk-site-selector-password'].every(function(selector) {
+                                return !$.trim($$(selector).val());
+                        }));
                     }, function() {
                         Notifier.notify('EMPTY_INPUT');
-                    }, true).validate(function() {
+                    }, true).add( function () {
+                        return !! $.trim($$('input#pk-password').val());
+                    }, function () {
+                        Notifier.notify('PASSKEEPER_PASSWORD_EMPTY');
+                    }, true ).validate(function() {
                         DataSource.login($$('#pk-password').val(), function(response) {
                             var site = $$('#pk-new-site').val();
                             var usernm = $$('#pk-site-username').val();
@@ -538,7 +544,7 @@ $(function() {
         '              <input type="text" tabindex="3" name="pk-site-username" id="pk-site-username" value="" placeholder="Username" /> ' +
         '              <input type="text" tabindex="4" name="pk-site-selector-username" id="pk-site-selector-username" value="" placeholder="Username selector" /> ' +
         '              <input type="password" tabindex="5" name="pk-site-password" id="pk-site-password" value="" placeholder="Password for This Site" /> ' +
-        '              <input type="password" tabindex="6" name="pk-site-selector-password" id="pk-site-selector-password" value="" placeholder="Password selector" /> ' +
+        '              <input type="text" tabindex="6" name="pk-site-selector-password" id="pk-site-selector-password" value="" placeholder="Password selector" /> ' +
         '              <input type="password" tabindex="7" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
         '              <div class="passkeeper-new-buttons"> ' +
         '                  <a href="#" id="pk-btn-new" tabindex="8">Go</a> ' +

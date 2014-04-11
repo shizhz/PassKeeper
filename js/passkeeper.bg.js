@@ -93,24 +93,25 @@
                 PK_BUCKET: JSON.stringify(this.db)
             }, (function() {
                 console.log('PK_BUCKET UPDATED');
-                console.log(this.db);
             }).bind(this));
         },
 
         saveOrUpdate: function(params) {
             var token_ = params.token;
+            var merge = function(newer, older) {
+                return !!newer ? (newer == '_clear_' ? "" : newer) : older;
+            };
 
             if (this.token == token_) {
                 this.token = null;
                 var key = params.key;
-                var um = params.username;
-                var password = params.password;
+                var oldRecord = this.db.bucket[key] || {};
                 var record = {
-                    username: um,
-                    passwd: password,
-                    selectorLogin: params.selectorLogin,
-                    selectorUsername: params.selectorUsername,
-                    selectorPassword: params.selectorPassword
+                    username: merge(params.username, oldRecord.username),
+                    passwd: merge(params.password, oldRecord.passwd),
+                    selectorLogin: merge(params.selectorLogin, oldRecord.selectorLogin),
+                    selectorUsername: merge(params.selectorUsername, oldRecord.selectorUsername),
+                    selectorPassword: merge(params.selectorPassword, oldRecord.selectorPassword)
                 };
 
                 this.db.bucket[key] = record;
@@ -225,7 +226,6 @@
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (!DBDriver.db) {
             DBDriver.init(function() {
-                console.log('i am here' + new Date());
                 sendResponse(DBDriver.dispatch(request));
             });
             // https://developer.chrome.com/extensions/runtime#event-onMessage : This function becomes invalid when the event listener returns, unless you return true from the event listener to indicate you wish to send a response asynchronously (this will keep the message channel open to the other end until sendResponse is called).
