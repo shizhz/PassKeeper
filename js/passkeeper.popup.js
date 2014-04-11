@@ -452,9 +452,6 @@
         };
 
         var HotKeys = {
-            enable: false,
-            modes: ['INSERT', 'NORMAL'],
-            currentMode: 'INSERT',
             keys: {
                 '27': false, // esc
                 '37': false, // left key
