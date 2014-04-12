@@ -44,6 +44,7 @@
             queue: [],
 
             add: function(checker, rollback, stopIfUnpassed) {
+                checker = checker || NOP;
                 rollback = rollback || NOP;
                 this.queue.push([checker, rollback, stopIfUnpassed]);
                 return this;
@@ -67,9 +68,9 @@
                 this.queue = [];
             },
 
-            validate: function(ohye, ohno) {
-                ohye = ohye || NOP;
-                ohno = ohno || NOP;
+            validate: function(success, fail) {
+                success = success || NOP;
+                fail = fail || NOP;
 
                 if (this.queue.map((function(item, index, queue_) {
                     var checker = item[0];
@@ -90,9 +91,9 @@
                 }).bind(this)).every(function(ele) {
                     return !!ele;
                 })) {
-                    ohye();
+                    success();
                 } else {
-                    ohno();
+                    fail();
                 }
 
                 this.clearAll();
@@ -109,17 +110,17 @@
                 });
             },
 
-            newPasswd: function(args, ohye, ohno) {
+            newPasswd: function(args, success, fail) {
                 this.send('newPasswd', args, function(response) {
-                    ( !! response.result ? ohye() : ohno());
+                    ( !! response.result ? success() : fail());
                 });
             },
 
-            login: function(password, ohye, ohno) {
+            login: function(password, success, fail) {
                 this.send('login', {
                     passwd: password
                 }, function(response) {
-                    ( !! response.result ? ohye(response) : ohno());
+                    ( !! response.result ? success(response) : fail());
                 });
             },
 
@@ -131,31 +132,31 @@
                 });
             },
 
-            saveOrUpdate: function(args, ohye, ohno) {
+            saveOrUpdate: function(args, success, fail) {
                 this.send('saveOrUpdate', args, function(response) {
                     if (response.result) {
-                        ohye();
+                        success();
                     } else {
-                        ohno();
+                        fail();
                     }
                 });
             },
 
-            loadByKey: function(args, ohye, ohno) {
+            loadByKey: function(args, success, fail) {
                 this.send('get', args, function(response) {
-                    ( !! response.result ? ohye(response) : ohno(response));
+                    ( !! response.result ? success(response) : fail(response));
                 });
             },
 
-            queryByKey: function(args, ohye, ohno) {
+            queryByKey: function(args, success, fail) {
                 this.send('query', args, function(response) {
-                    ( !! response.result ? ohye(response) : ohno(response));
+                    ( !! response.result ? success(response) : fail(response));
                 });
             },
 
-            removeByKey: function(args, ohye, ohno) {
+            removeByKey: function(args, success, fail) {
                 this.send('remove', args, function(response) {
-                    ( !! response.result ? ohye(response) : ohno());
+                    ( !! response.result ? success(response) : fail());
                 });
             }
         };
