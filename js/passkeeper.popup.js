@@ -544,8 +544,8 @@ $(function() {
         '              <input type="text" tabindex="6" name="pk-site-selector-password" id="pk-site-selector-password" value="" placeholder="Password selector" /> ' +
         '              <input type="password" tabindex="7" name="pk-password" id="pk-password" value="" placeholder="Password for Passkeeper" /> ' +
         '              <div class="passkeeper-new-buttons"> ' +
-        '                  <a href="#" id="pk-btn-new" tabindex="8">Go</a> ' +
         '                  <a href="#" id="pk-btn-remove" tabindex="9">Remove</a> ' +
+        '                  <a href="#" id="pk-btn-new" tabindex="8">Go</a> ' +
         '              </div> ' +
         '          </div> ' +
         '      </div> ' +
